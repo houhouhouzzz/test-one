@@ -284,6 +284,6 @@ JS
     }
 
     public function OnceDefaultShippingExport(Request $request){
-        return Excel::download(new OnceDefaultShippingExport($request->get('ids')), 'users.xlsx');
+        return Excel::download(new OnceDefaultShippingExport($request->get('ids')), '一键合联.xlsx');
     }
 }

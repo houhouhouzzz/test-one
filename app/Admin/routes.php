@@ -6,7 +6,6 @@ Admin::routes();
 
 Route::get('admin/orders/once-default-shipping-export', 'OrderController@OnceDefaultShippingExport');
 
-
 Route::group([
     'prefix'        => config('admin.route.prefix'),
     'namespace'     => config('admin.route.namespace'),
@@ -16,23 +15,12 @@ Route::group([
 
     $router->get('/', 'HomeController@index')->name('home');
 
-//    $router->group(['prefix' => 'order'], function ($router) {
-//        $router->get('/', 'OrderController@index');
-//        $router->get('/{id}', 'OrderController@show');
-//        $router->put('/{id}', 'OrderController@update');
-//        $router->post('/', 'OrderController@store');
-//    });
-
     $router->resource('warehouses', WarehouseController::class);
     $router->resource('sku-inventories', SkuInventoryController::class);
     $router->resource('purchases', PurchaseController::class);
     $router->resource('skus', SkuController::class);
 
     $router->resource('what-apps', WhatAppController::class);
-//    $router->post('/products', 'ProductController@');
-//    $router->post('/products/create', 'ProductController@create');
-//    $router->get('/products/{id}', 'ProductController@queryfhOrder');
-//    $router->put('/products/{id}', 'ProductController@queryfhOrder');
     $router->resource('products', ProductController::class);
     $router->post('/products/edit/{id}', 'ProductController@update');
     $router->resource('categories', CategoryController::class);
