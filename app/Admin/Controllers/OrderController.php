@@ -7,10 +7,11 @@ use App\Admin\Actions\Post\Order\CreateOrder;
 use App\Admin\Actions\Post\Order\ExportOrderDataTemplate;
 use App\Admin\Actions\Post\Order\ImportOrderData;
 use App\Admin\Actions\Post\ViewDetail;
+use App\Admin\Tools\OnceDefaultShipping;
 use App\Exporter\OrderExporter;
+use App\Exports\OnceDefaultShippingExport;
 use App\Extensions\Util;
 use App\Model\Order;
-use App\Model\Product;
 use App\Model\ShippingMethod;
 use App\Model\Sku;
 use App\Model\SkuInventory;
@@ -19,6 +20,9 @@ use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class OrderController extends AdminController
 {
@@ -46,6 +50,7 @@ class OrderController extends AdminController
 
         $grid->exporter(new OrderExporter());
 
+
         $grid->batchActions(function ($batch) {
             $batch->disableDelete();
             $batch->add(new BatchStatus());
@@ -56,6 +61,9 @@ class OrderController extends AdminController
             $tools->append(new ExportOrderDataTemplate());
             $tools->append(new ImportOrderData());
             $tools->append(new CreateOrder());
+            $tools->batch(function ($batch) {
+                $batch->add('一键发货(合联)', new OnceDefaultShipping());
+            });
         });
 
         $grid->actions(function ($actions) {
@@ -79,7 +87,7 @@ class OrderController extends AdminController
             $filter->column(1/2, function ($filter) {
                 $filter->equal('order_no', '订单号');
                 $filter->like('customer_what_apps', 'whatsapp');
-                $filter->between('updated_at', '下单时间')->datetime();
+                $filter->between('created_at', '下单时间')->datetime();
             });
         });
 
@@ -257,5 +265,25 @@ JS
             $product->save();
             return ['display' => [], 'message' => "更新成功 !", 'status' => true];
         }
+    }
+
+    public function OnceDefaultShipping(Request $request){
+        foreach (Order::where('order_status', '<=', Order::ORDER_STATUS_SHIPPING)->find($request->get('ids')) as $model) {
+            DB::transaction(function () use($model) {
+                if($model->order_status < Order::ORDER_STATUS_SHIPPING){
+                    foreach ($model->products as $product){
+                        SkuInventory::incrementInventory($product->sku_id, - $product['quantity']);
+                    }
+                }
+                $model->order_status = Order::ORDER_STATUS_SHIPPING;
+                $model->shipping_method_id = ShippingMethod::SHIPPING_HELIAN;
+                $model->shipping_status = ShippingMethod::DEFAULT_STATUS;
+                $model->save();
+            });
+        }
+    }
+
+    public function OnceDefaultShippingExport(Request $request){
+        return Excel::download(new OnceDefaultShippingExport($request->get('ids')), 'users.xlsx');
     }
 }

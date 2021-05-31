@@ -4,6 +4,9 @@ use Illuminate\Routing\Router;
 
 Admin::routes();
 
+Route::get('admin/orders/once-default-shipping-export', 'OrderController@OnceDefaultShippingExport');
+
+
 Route::group([
     'prefix'        => config('admin.route.prefix'),
     'namespace'     => config('admin.route.namespace'),
@@ -25,13 +28,6 @@ Route::group([
     $router->resource('purchases', PurchaseController::class);
     $router->resource('skus', SkuController::class);
 
-    $router->group(['prefix' => 'purchase'], function ($router) {
-        $router->get('/', 'PurchaseController@index');
-        $router->get('/{id}', 'PurchaseController@show');
-        $router->put('/{id}', 'PurchaseController@update');
-        $router->post('/', 'PurchaseController@store');
-    });
-
     $router->resource('what-apps', WhatAppController::class);
 //    $router->post('/products', 'ProductController@');
 //    $router->post('/products/create', 'ProductController@create');
@@ -45,7 +41,8 @@ Route::group([
     $router->resource('owing', OwingController::class);
     $router->resource('sku-returns', SkuReturnController::class);
 
-
+    $router->post('orders/once-default-shipping', 'OrderController@OnceDefaultShipping');
+    $router->get('orders/once-default-shipping-export', 'OrderController@OnceDefaultShippingExport');
 
     $router->get('export/template/{name}', 'ExportController@template');
 

@@ -23,4 +23,8 @@ class OrderProduct extends Model
     public function sku(){
         return $this->belongsTo(Sku::class);
     }
+
+    public function product(){
+        return $this->belongsTo(Product::class);
+    }
 }

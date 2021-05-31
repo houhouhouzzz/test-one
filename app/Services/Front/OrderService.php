@@ -30,5 +30,6 @@ class OrderService
             'quantity' => array_get($params, 'quantity', 1),
             'price' => $sku->product->{$current_price . '_price'}
         ];
+        $params['weight_total'] = array_get($params, 'quantity', 1) * $sku->product->weight;
     }
 }
