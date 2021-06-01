@@ -5,12 +5,10 @@ namespace App\Http\Controllers\Front;
 use App\Extensions\Util;
 use App\Http\Controllers\Controller;
 use App\Model\Product;
-use App\Model\WhatApp;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index($id, $country){
+    public function index($id, $country=''){
         $product = Product::find($id);
         if(!$product){
             return view('front.product.index',

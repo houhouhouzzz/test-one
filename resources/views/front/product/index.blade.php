@@ -50,13 +50,13 @@
 <div id="english" style="position: relative; display: block;">
     <div class="home" style="position: relative;">
         <div class="header" style="">
-            <img src="{{\App\Extensions\Util::to('/static/image/back.png')}}" alt="" class="backen click-btn-indextohome" />
+{{--            <img src="{{\App\Extensions\Util::to('/static/image/back.png')}}" alt="" class="backen click-btn-indextohome" />--}}
 {{--            <div class="logol click-btn-indextohome" style="height:1rem;line-height: 1rem;text-align: center">--}}
 {{--                one-page--}}
 {{--            </div>--}}
 
             <img src="{{\App\Extensions\Util::to('/static/image/logo.jpeg')}}" alt="" class="logol click-btn-indextohome" />
-            <img src="{{\App\Extensions\Util::to('/static/image/homeicon.png')}}" alt="" class="homeicon click-btn-indextohome" />
+{{--            <img src="{{\App\Extensions\Util::to('/static/image/homeicon.png')}}" alt="" class="homeicon click-btn-indextohome" />--}}
         </div>
         <div style="height: 0.98rem;">
         </div>

@@ -483,7 +483,12 @@
                             headers:{'X-Requested-With' : 'XMLHttpRequest'}
                         })
                             .then(function (response) {
-                                swal("成功", '商品创建成功', 'success', {
+                                @if(empty($product->id))
+                                        var title = '商品创建成功';
+                                @else
+                                        var title = '商品保存成功';
+                                @endif
+                                swal("成功", title, 'success', {
                                     dangerMode: true,
                                     confirmButton: true,
                                     timer:3000
