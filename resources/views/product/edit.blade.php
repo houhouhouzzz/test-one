@@ -13,7 +13,7 @@
                     @endif
                     <div class="box-tools">
                         <div class="btn-group pull-right" style="margin-right: 5px">
-                            <a href="http://one-page-dev.com/admin/products" class="btn btn-sm btn-default" title="列表"><i class="fa fa-list"></i><span class="hidden-xs">&nbsp;列表</span></a>
+                            <a href="/admin/products" class="btn btn-sm btn-default" title="列表"><i class="fa fa-list"></i><span class="hidden-xs">&nbsp;列表</span></a>
                         </div>
                         <a class="btn btn-sm btn-info" target="_blank" href="/admin/categories/create">创建分类</a> <a class="btn btn-sm btn-danger" target="_blank" href="https://www.hsbianma.com">海关编码查询</a>
                     </div>
