@@ -154,7 +154,7 @@ class Product extends Model
             $product->bh_price = $data['bh_price'];
             $product->om_price = $data['om_price'];
             $product->video_position = $data['video_position'];
-            $product->video_link = $data['video_link'];
+            $product->video_link = $data['video_link']??'';
 
 //            $product->options = $data['options'];
             $product->cost = $data['cost'];
