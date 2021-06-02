@@ -351,7 +351,7 @@ class ProductController extends AdminController
 
     public function update($id){
         $post = request()->all();
-        if(!empty($post['value']) && !empty($post['name'])){
+        if(isset($post['value']) && !empty($post['name'])){
             $product = Product::findOrFail($id);
             $product->{$post['name']} = $post['value'];
             $product->save();

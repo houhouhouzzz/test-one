@@ -16,12 +16,12 @@ class Product extends Model
     const NUMBER_PREFIX = 'PN_';
 
     const PRICE_COLUMNS = [
-        'sa' => ['price_column' => 'sa_price', 'currency_code'=>'SAR', 'pre_phone' => "+966", 'phone_length'=>'9'],
-        'ae' => ['price_column' => 'ae_price', 'currency_code'=>'AED', 'pre_phone' => "+971", 'phone_length'=>'9'],
-        'qa' => ['price_column' => 'qa_price', 'currency_code'=>'QAR', 'pre_phone' => "+974", 'phone_length'=>'8'],
-        'kw' => ['price_column' => 'kw_price', 'currency_code'=>'KWD', 'pre_phone' => "+965", 'phone_length'=>'8'],
-        'bh' => ['price_column' => 'bh_price', 'currency_code'=>'BHD', 'pre_phone' => "+973", 'phone_length'=>'8'],
-        'om' => ['price_column' => 'om_price', 'currency_code'=>'OMR', 'pre_phone' => "+968", 'phone_length'=>'8'],
+        'sa' => ['price_column' => 'sa_price', 'currency_code'=>'SAR', 'pre_phone' => "966", 'phone_length'=>'9'],
+        'ae' => ['price_column' => 'ae_price', 'currency_code'=>'AED', 'pre_phone' => "971", 'phone_length'=>'9'],
+        'qa' => ['price_column' => 'qa_price', 'currency_code'=>'QAR', 'pre_phone' => "974", 'phone_length'=>'8'],
+        'kw' => ['price_column' => 'kw_price', 'currency_code'=>'KWD', 'pre_phone' => "965", 'phone_length'=>'8'],
+        'bh' => ['price_column' => 'bh_price', 'currency_code'=>'BHD', 'pre_phone' => "973", 'phone_length'=>'8'],
+        'om' => ['price_column' => 'om_price', 'currency_code'=>'OMR', 'pre_phone' => "968", 'phone_length'=>'8'],
     ];
 
     public static function ele_maps(){

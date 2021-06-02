@@ -83,6 +83,7 @@ class OrderController extends AdminController
                     });
                 }, 'Sku');
                 $filter->equal('order_type', '订单类型')->select(Order::ORDER_TYPE_MAP);
+                $filter->equal('order_status', '订单状态')->select(Order::ORDER_STATUS_MAP);
             });
             $filter->column(1/2, function ($filter) {
                 $filter->equal('order_no', '订单号');
@@ -103,7 +104,9 @@ class OrderController extends AdminController
                 ."</a></span>";
         });
         $grid->column('customer_name', __('用户名称'));
-        $grid->column('customer_phone', __('用户电话'));
+        $grid->column('customer_phone', __('用户电话'))->display(function($customer_phone){
+            return $customer_phone . '<br><a class="btn btn-info btn-sm" target="_blank" href="https://web.whatsapp.com/send?phone='.$customer_phone.'">调用whatsApp</a>';
+        });
         $grid->column('customer_what_apps', __('whatsapp'))->display(function($customer_what_apps){
             return "<a target='_blank' href='https://web.whatsapp.com/send?phone=$customer_what_apps'>$customer_what_apps</a>";
         });
@@ -139,15 +142,14 @@ address : $address
         });
 
         $grid->column('created_at', __('下单时间'));
-        $grid->column('order_status', __('订单状态'))->display(function($order_status){
-            return Order::ORDER_STATUS_MAP[$order_status]??'';
-        });
+        $grid->column('order_status', __('订单状态'))
+            ->editable('select', Order::ORDER_STATUS_MAP);
 //        $grid->column('order_source', __('订单来源'));
         $grid->column('note', __('订单备注'))->editable();
 
         $grid->column('shipping_method_id', __('物流公司'))
             ->editable('select', ShippingMethod::SHIPPING_METHOD_MAP);
-        $grid->column('tracking_number', __('物流运单号'));
+        $grid->column('tracking_number', __('物流运单号'))->editable();
         $grid->column('shipping_status', __('物流状态'))
             ->editable('select', ShippingMethod::SHIPPING_STATUS);
         $grid->column('shipping_at', __('发货时间'));

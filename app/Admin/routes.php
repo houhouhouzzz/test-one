@@ -28,6 +28,8 @@ Route::group([
     $router->resource('orders', OrderController::class);
     $router->resource('owing', OwingController::class);
     $router->resource('sku-returns', SkuReturnController::class);
+    $router->resource('term-services', TermServiceController::class);
+
 
     $router->post('orders/once-default-shipping', 'OrderController@OnceDefaultShipping');
     $router->get('orders/once-default-shipping-export', 'OrderController@OnceDefaultShippingExport');
@@ -37,5 +39,6 @@ Route::group([
     $router->get('api/category', 'CategoryController@category');
     $router->get('api/sku', 'SkuController@sku');
     $router->post('api/upload', 'FileController@upload');
+
 
 });

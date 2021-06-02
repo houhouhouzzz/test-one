@@ -23,6 +23,59 @@
         {
             line-height: .80rem;
         }
+        .good-services {
+            font-size: 12px;
+            width: 100%;
+            padding: 10px 5px;
+        }
+        .clear:after, .clear:before {
+            display: table;
+            clear: both;
+            content: "";
+        }
+        .good-services .item {
+            float: left;
+            width: 33.3%;
+            box-sizing: border-box;
+        }
+        .good-services .item:first-child {
+            text-align: left;
+        }
+        .good-services .item:nth-child(2) {
+            text-align: center;
+        }
+        .good-services .item:nth-child(3) {
+            text-align: right;
+        }
+        .good-services .item span {
+            display: inline-block;
+            margin-right: 3px;
+            font-size: 12px;
+            line-height: 16px;
+            height: 16px;
+            width: 16px;
+            border-radius: 9px;
+            text-align: center;
+            border: 1px solid #666;
+        }
+        .good-services.good-services-style-1 span {
+            vertical-align: baseline;
+        }
+        .good-services .item>div {
+            display: inline-block;
+        }
+        .select2-container--default .select2-selection--single{
+            border: none;
+        }
+        .select2-container .select2-selection--single .select2-selection__rendered{
+            padding: 0;
+        }
+        .tellabel .select2-container .select2-selection--single{
+            display: inline-block;
+        }
+        .select2-selection__arrow{
+            display: none;
+        }
     </style>
     <script>
         //控制响应式
@@ -76,6 +129,22 @@
             </div>
             <div class="clear" style="float: none;"></div>
         </div>
+        <div class="good-services good-services-style-1 clear">
+            <div class="item">
+                <span style="color: #b10c0c; border-color: #b10c0c;">$</span>
+                <div>COD</div>
+            </div>
+            <div class="item">
+						<span style="color: #b10c0c; border-color: #b10c0c; vertical-align: bottom; padding-top: 1px;">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1024 1024" version="1.1" height="12px">
+<path fill="#b10c0c" d="M837.174 673.388c-25.022 0-48.792 9.8-66.724 27.523-17.932 17.932-27.94 41.286-27.94 66.307s9.8 48.375 27.94 66.307c18.14 17.723 41.702 27.523 66.724 27.523 51.294 0 92.996-42.12 92.996-93.83s-41.702-93.83-92.996-93.83z m0 145.958c-28.775 0-52.962-23.77-52.962-52.128s24.187-52.128 52.962-52.128c28.357 0 51.294 23.353 51.294 52.128s-22.937 52.128-51.294 52.128z m24.187-458.517c-3.753-3.545-8.757-5.421-13.97-5.421H740.424c-11.468 0-20.85 9.383-20.85 20.851v170.98c0 11.468 9.382 20.85 20.85 20.85h169.729c11.468 0 20.85-9.382 20.85-20.85V432.765c0-5.839-2.501-11.469-6.88-15.43l-62.762-56.507z m27.94 165.558H761.277V396.902h77.983l50.043 45.038v84.447z m-561.312 147c-25.022 0-48.792 9.8-66.724 27.524-17.932 17.932-27.94 41.286-27.94 66.307s9.8 48.375 27.94 66.307c18.14 17.723 41.702 27.523 66.724 27.523 51.293 0 92.996-42.12 92.996-93.83s-41.703-93.83-92.996-93.83z m0 145.959c-28.775 0-52.962-23.77-52.962-52.128s24.187-52.128 52.962-52.128c28.357 0 51.293 23.353 51.293 52.128s-22.936 52.128-51.293 52.128zM188.91 699.035h-41.91V643.57c0-11.468-9.383-20.851-20.852-20.851s-20.85 9.383-20.85 20.85v76.316c0 11.468 9.382 20.851 20.85 20.851h62.762c11.469 0 20.852-9.383 20.852-20.851s-9.383-20.851-20.852-20.851z m105.716-113.639c0-11.468-9.383-20.851-20.851-20.851H20.85C9.383 564.545 0 573.928 0 585.396s9.383 20.851 20.851 20.851h252.925c11.468 0 20.85-9.174 20.85-20.85zM63.179 510.123l252.924 1.46c11.469 0 20.852-9.175 21.06-20.643 0.209-11.676-9.174-21.06-20.643-21.06l-252.924-1.459h-0.209c-11.468 0-20.85 9.175-20.85 20.643-0.21 11.676 9.174 21.06 20.642 21.06z m42.536-94.664H358.64c11.468 0 20.85-9.383 20.85-20.851s-9.382-20.851-20.85-20.851H105.715c-11.468 0-20.85 9.383-20.85 20.851s9.382 20.851 20.85 20.851z m910.57-28.149L866.991 263.663c-3.753-3.128-8.34-4.796-13.345-4.796H678.08v-75.064c0-11.468-9.383-20.851-20.85-20.851h-531.08c-11.468 0-20.85 9.383-20.85 20.85v152.631c0 11.468 9.382 20.851 20.85 20.851s20.852-9.383 20.852-20.85v-131.78h489.585v494.38h-170.98c-11.468 0-20.851 9.384-20.851 20.852s9.383 20.851 20.851 20.851H720.2c11.468 0 20.85-9.383 20.85-20.851s-9.382-20.851-20.85-20.851h-41.911V300.569h168.06l135.95 112.597-1.46 285.452h-21.685c-11.468 0-20.851 9.383-20.851 20.85s9.383 20.852 20.85 20.852h42.329c11.468 0 20.85-9.174 20.85-20.643L1024 403.574c-0.209-6.255-2.92-12.302-7.715-16.264z"></path></svg></span>
+                <div>Free postage</div>
+            </div>
+            <div class="item">
+                <span style="color: #b10c0c; border-color: #b10c0c;">7</span>
+                <div>7-day return</div>
+            </div>
+        </div>
 
         <div class="imgContainer visible-img-detail" data-gtm-vis-first-on-screen-13511651_20="2044" data-gtm-vis-total-visible-time-13511651_20="100" data-gtm-vis-has-fired-13511651_20="1">
             <?php $i = 1; ?>
@@ -121,26 +190,26 @@
             @endif
         </div>
         <div class="cover-bg" style="display: none;"></div>
-        <div class="service-pachic">
-            <div>
-                <img src="{{\App\Extensions\Util::to('/static/image/car.png')}}" alt="" style="width: 0.58rem; height: 0.44rem; margin-bottom: 0.1rem; margin-top: 0.1rem;" />
-                <div class="serviceblock" style="">
-                    Cash on Delivery
-                </div>
-            </div>
-            <div>
-                <img src="{{App\Extensions\Util::to('/static/image/airplain.png')}}" alt="" style="width: 0.54rem; height: 0.54rem; margin-bottom: 0.05rem; margin-top: 0.05rem;" />
-                <div class="serviceblock" style="">
-                    Free Shipping
-                </div>
-            </div>
-            <div>
-                <img src="{{\App\Extensions\Util::to('/static/image/good.png')}}" alt="" style="width: 0.54rem; height: 0.54rem; margin-bottom: 0.1rem;" />
-                <div class="serviceblock" style="">
-                    Genuine Guarantee
-                </div>
-            </div>
-        </div>
+{{--        <div class="service-pachic">--}}
+{{--            <div>--}}
+{{--                <img src="{{\App\Extensions\Util::to('/static/image/car.png')}}" alt="" style="width: 0.58rem; height: 0.44rem; margin-bottom: 0.1rem; margin-top: 0.1rem;" />--}}
+{{--                <div class="serviceblock" style="">--}}
+{{--                    Cash on Delivery--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--            <div>--}}
+{{--                <img src="{{App\Extensions\Util::to('/static/image/airplain.png')}}" alt="" style="width: 0.54rem; height: 0.54rem; margin-bottom: 0.05rem; margin-top: 0.05rem;" />--}}
+{{--                <div class="serviceblock" style="">--}}
+{{--                    Free Shipping--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--            <div>--}}
+{{--                <img src="{{\App\Extensions\Util::to('/static/image/good.png')}}" alt="" style="width: 0.54rem; height: 0.54rem; margin-bottom: 0.1rem;" />--}}
+{{--                <div class="serviceblock" style="">--}}
+{{--                    Genuine Guarantee--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
         <div class="Consumer-Services english visible-info-contactus" style="display: block;" data-gtm-vis-first-on-screen-13511651_21="202" data-gtm-vis-total-visible-time-13511651_21="100" data-gtm-vis-has-fired-13511651_21="1">
             <div id="accordion2" role="tablist" aria-multiselectable="true" class="panel-group">
                 <div class="panel panel-default">
@@ -169,21 +238,11 @@
             </div>
         </div>
         <div class="TermsContainer">
+            @foreach($term_services as $term_service)
             <div>
-                Shipment
+                <a href="/{{$term_service['name']}}">{{$term_service['name']}}</a>
             </div>
-            <div>
-                Returns
-            </div>
-            <div>
-                About Us
-            </div>
-            <div>
-                Privacy
-            </div>
-            <div>
-                Contact
-            </div>
+            @endforeach
         </div>
         <div class="cover-content" style="display: block;">
             <div id="option">
@@ -273,7 +332,12 @@
                                 Phone Number should 9-digit which start with 5
                             </div>
                             <div class="teldiv phonemust">
-                                <div class="tellabel" v-text="pre_phone">
+                                <div class="tellabel">
+                                    <select id="phone_select" v-model="pre_phone">
+                                        @foreach(array_column(\App\Model\Product::PRICE_COLUMNS, 'pre_phone') as $pre_phone_value)
+                                            <option value="{{$pre_phone_value}}">{{$pre_phone_value}}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                             <img src="{{\App\Extensions\Util::to('/static/image/phoneicon.png')}}" alt="" class="phoneicon" />
                                 <input id="phoneNumber" v-model="customer_phone" type="number" @input="numChange"  name="phone" placeholder="*Phone Number" class="phone" />
@@ -364,6 +428,7 @@
                 pre_phone : '{{$price_info['pre_phone']}}',
                 address : '',
                 phone_length : {{$price_info['phone_length']}},
+                phone_length_map : {!! json_encode(array_column(\App\Model\Product::PRICE_COLUMNS, 'phone_length', 'pre_phone' )) !!},
                 price_infos : {!! json_encode(\App\Model\Product::PRICE_COLUMNS) !!},
                 address_note : '',
             },
@@ -402,7 +467,7 @@
                     if(!this.$options.methods.checkSend()) return;
                     axios.post('{{url('/order')}}', vm.$data)
                         .then(function (response) {
-                            swal("Thank you for your purchase!", 'Your order has been created successfully.', 'success', {
+                            swal("Thank you for your purchase!", 'Your order has been created successfully.<br>We’ll contact you to confirm it within 24H', 'success', {
                                 confirmButton: true,
                             }).then(function(){
                                 window.location.href = '{{\App\Extensions\Util::to('/category/' . $product->category_id)}}';
@@ -460,17 +525,25 @@
                     }).then(function(){
                         $(focus).focus();
                     });
+                },
+                dealPrePhoneChange : function (){
+                    this.phone_length = this.phone_length_map[this.pre_phone];
                 }
             }
         });
         window.vm = vm;
+        $('#phone_select').css("width","1.65rem").select2({
+            minimumResultsForSearch: -1
+        });
+        $('#phone_select').on('change', function(){
+            vm.pre_phone = $(this).select2('data')[0].id;
+            vm.dealPrePhoneChange();
+        })
         $('#country_select').css("width","4.63rem").select2();
         $('#country_select').on('change', function(){
             vm.country_code = $(this).select2('data')[0].id;
         })
         $("#country_select").val(['{{ $country }}']).trigger('change');
-
     });
-
 </script>
 </html>

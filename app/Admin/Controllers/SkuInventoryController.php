@@ -17,7 +17,7 @@ class SkuInventoryController extends AdminController
      *
      * @var string
      */
-    protected $title = 'SkuInventory';
+    protected $title = '产品库存';
 
     /**
      * Make a grid builder.

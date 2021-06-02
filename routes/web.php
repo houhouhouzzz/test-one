@@ -21,4 +21,6 @@ Route::get('/return/{country?}', 'ReturnController@index');
 
 Route::post('/order', 'OrderController@store');
 
+Route::get('/{service_name}', 'TermServiceController@index');
+
 

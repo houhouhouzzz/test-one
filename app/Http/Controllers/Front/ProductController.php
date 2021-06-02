@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front;
 use App\Extensions\Util;
 use App\Http\Controllers\Controller;
 use App\Model\Product;
+use App\Model\TermService;
 
 class ProductController extends Controller
 {
@@ -23,9 +24,9 @@ class ProductController extends Controller
         $product->top_picture = array_get($pictures, 0, '');
         unset( $pictures['0']);
         $product->pictures = $pictures;
-
+        $term_services = TermService::getCacheValidAll();
         return view('front.product.index',
-            compact('product', 'price_info', 'country'));
+            compact('product', 'price_info', 'country', 'term_services'));
 
     }
 
