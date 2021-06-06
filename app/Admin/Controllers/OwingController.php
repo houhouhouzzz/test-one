@@ -51,14 +51,16 @@ class OwingController extends AdminController
             });
         });
 
+        $grid->disableActions();
+
         $grid->disableCreateButton();
         $grid->disableRowSelector();
 
-        $grid->actions(function($tool){
-            $tool->disableView();
-            $tool->disableDelete();
-            $tool->disableEdit();
-        });
+//        $grid->actions(function($tool){
+//            $tool->disableView();
+//            $tool->disableDelete();
+//            $tool->disableEdit();
+//        });
 
         $grid->column('sku', __('Sku'));
         $grid->column('image', '图片')->display(function($image_url){
@@ -73,10 +75,11 @@ class OwingController extends AdminController
                 ->where('order_products.sku_id', $this->id)->count();
         });
         $grid->column('un_confirm_number', '72小时未确认订单数')->display(function (){
-            return Order::join('order_products', 'order_products.order_id', '=', 'orders.id')
+            $this->tmp_un_confirm_number =Order::join('order_products', 'order_products.order_id', '=', 'orders.id')
                 ->where('orders.created_at', '>=', Carbon::now()->subDays(3))
                 ->where('orders.order_status', Order::ORDER_STATUS_UNCONFIRM)
                 ->where('order_products.sku_id', $this->id)->count();
+            return $this->tmp_un_confirm_number;
         });
 
         $grid->column('purchases', '已采购数量(在途中)')->display(function (){
@@ -95,6 +98,10 @@ class OwingController extends AdminController
                     $supplier->link, $supplier->link, $supplier->note);
             }
             return '';
+        });
+
+        $grid->column('to_purchase', '跳转采购单')->display(function (){
+            return  sprintf('<a class="btn btn-sm btn-info" target="_blank" href="/admin/purchases/create?sku_id=%s&quantity=%s">创建采购单</a>', $this->id, $this->tmp_un_confirm_number);
         });
 
         return $grid;

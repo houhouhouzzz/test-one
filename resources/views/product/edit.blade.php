@@ -12,7 +12,7 @@
                         <h3 class="box-title">商品编辑</h3>
                     @endif
                     <div class="box-tools">
-                        <div class="btn-group pull-right" style="margin-right: 5px">
+                        <div class="btn-group pull-right" style="margin-right: 5px" style="display: none">
                             <a href="/admin/products" class="btn btn-sm btn-default" title="列表"><i class="fa fa-list"></i><span class="hidden-xs">&nbsp;列表</span></a>
                         </div>
                         <a class="btn btn-sm btn-info" target="_blank" href="/admin/categories/create">创建分类</a>

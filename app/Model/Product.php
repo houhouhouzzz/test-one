@@ -59,7 +59,7 @@ class Product extends Model
     }
 
     public function getDetailPicturesAttribute(){
-        $detail_pictures = array_slice($this->pictures, 4);
+        $detail_pictures = array_slice($this->pictures, 5);
         array_walk($detail_pictures, function (&$detail_picture){
             $detail_picture = '/' . $detail_picture;
         });

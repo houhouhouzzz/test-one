@@ -109,15 +109,17 @@ class PurchaseController extends AdminController
     {
         $form = new Form(new Purchase());
 
-        $form->select('sku_id', __('Sku'))->rules('required', [
+        $form->select('sku_id', __('Sku'))->value(request('sku_id', 0))->rules('required|int|min:1', [
             'required' => 'sku必选',
+            'min' => '请选择sku',
+            'int' => '请选择sku',
         ])->options(function ($id) {
             $sku = Sku::find($id);
             if ($sku) {
                 return [$sku->id => $sku->sku];
             }
         })->ajax('/admin/api/sku');
-        $form->number('quantity', __('采购数量'))->value(1)->rules('required|min:1', [
+        $form->number('quantity', __('采购数量'))->value(request('quantity', 0))->rules('required|min:1', [
             'required' => '标题必填',
             'min' => '最小值为1',
         ]);

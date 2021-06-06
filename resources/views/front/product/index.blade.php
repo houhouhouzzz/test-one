@@ -284,7 +284,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="select-option" style="max-height: 540px; overflow-y: scroll;">
+                <div class="select-option" style="overflow-y: scroll;">
                     <div class="allOption">
                         Product details &nbsp;&nbsp; (Please select)
                     </div>
@@ -301,9 +301,12 @@
                         </div>
                     </div>
                     @if($gift_product)
-                    <div class="allOption">
+                    <div class="giftAllOption">
                         {{$gift_product->gift_title}}
                     </div>
+                        <div class="gift-option-title english" style="display: block;">
+                            <img v-bind:src="gift_sku_image" alt="" class="click-skuimg">
+                        </div>
                     <div class="option-btn-area" style="">
                         <div style="width:100%;min-height:0.7rem;max-height: 2.8rem" v-for="(main_button, main_select_title) in gift_skus.main_option">
                             <div v-text="main_select_title" style="float: left; margin-right: 0.3rem; position: relative;color: #9fa0a0;font-size: .21rem;padding: .05rem .2rem;width: 1rem;"></div>
@@ -468,6 +471,7 @@
             quantity : 1,
             sku : '',
             sku_image : '',
+            gift_sku_image : '',
             country_code : '{{$country}}',
             customer_name : '',
             customer_phone : '',
@@ -495,6 +499,7 @@
                 this.options = this.getOptions();
                 this.genSkuOptions();
                 @if($gift_product)
+                    this.gift_sku_image = this.getGiftSkuImage();
                     this.gift_options = this.getGiftOptions();
                     this.genGiftSkuOptions();
                 @endif
@@ -513,6 +518,11 @@
                 getSkuImage : function(){
                     for (let key in this.skus.main_option) {
                         return this.skus.main_option[key][this.main_option_value]['image'];
+                    }
+                },
+                getGiftSkuImage : function(){
+                    for (let key in this.gift_skus.main_option) {
+                        return this.gift_skus.main_option[key][this.gift_main_option_value]['image'];
                     }
                 },
                 getGiftOptions : function(){
@@ -563,6 +573,7 @@
                 changeGiftMainOption : function(key){
                     this.gift_main_option_value = key;
                     this.gift_options = vm.getGiftOptions();
+                    this.gift_sku_image = vm.getGiftSkuImage();
                     vm.genGiftSkuOptions();
                 },
                 beforeSend : function (){
@@ -650,6 +661,6 @@
     //调用
     var imgs = {!! json_encode($product->main_pictures) !!}
     var hrefs = ["#", "#2", "#3", "#4", '#5']
-    var lbt = lbimg("divs2", imgs,hrefs,3000).start()
+    var lbt = lbimg("divs2", imgs,hrefs,2000).start()
 </script>
 </html>

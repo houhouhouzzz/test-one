@@ -6,6 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderProduct extends Model
 {
+    protected $fillable = [
+        'product_id' ,
+        'product_name' ,
+        'sku_id' ,
+        'quantity' ,
+        'type' ,
+        'price'
+    ];
+
     public $timestamps = false;
 
     CONST TYPE_NORMAL = 'normal';

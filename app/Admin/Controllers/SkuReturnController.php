@@ -8,11 +8,14 @@ use App\Extensions\Util;
 use App\Model\Order;
 use App\Model\ShippingMethod;
 use App\Model\Sku;
+use App\Model\SkuInventory;
 use App\Model\SkuReturn;
+use App\Model\Warehouse;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Support\MessageBag;
 
 class SkuReturnController extends AdminController
 {
@@ -32,10 +35,11 @@ class SkuReturnController extends AdminController
     {
         $grid = new Grid(new SkuReturn());
 
+        $grid->model()->orderByDesc('created_at');
+
         $grid->expandFilter();
         $grid->disableRowSelector();
         $grid->disableActions();
-        $grid->disableCreateButton();
         $grid->disableColumnSelector();
         $grid->export(function ($export) {
             $export->column('country_code', function ($value, $original) {
@@ -115,10 +119,49 @@ class SkuReturnController extends AdminController
     {
         $form = new Form(new SkuReturn());
 
-        $form->number('sku_id', __('Sku id'));
-        $form->number('country_code', __('Country code'));
-        $form->number('shipping_method_id', __('Shipping method id'));
-        $form->text('origin_tracking_number', __('Origin tracking number'));
+        $form->disableCreatingCheck();
+        $form->disableViewCheck();
+        $form->disableEditingCheck();
+
+        $form->text('origin_tracking_number', __('运单号'))->rules('required',[
+            'required' => '运单号必填',
+        ]);
+
+        $form->saving(function (Form $form) {
+            if(SkuReturn::where('origin_tracking_number', $form->origin_tracking_number)->first()){
+                $error = new MessageBag([
+                    'title'   => '该运单号已退,请核对',
+                ]);
+                return back()->with(compact('error'));
+            }
+
+            $order = Order::where(['tracking_number'=>$form->origin_tracking_number])->first();
+            if(!$order){
+                $error = new MessageBag([
+                    'title'   => '该运单号不存在,请核对',
+                ]);
+                return back()->with(compact('error'));
+            }
+            foreach ($order->products as $product){
+                $params = [
+                    'sku_id' => $product->sku_id,
+                    'origin_tracking_number' => $order->tracking_number,
+                ];
+                $sku_return = SkuReturn::where($params)->first();
+                if(!$sku_return){
+                    SkuReturn::create(array_merge($params, [
+                        'shipping_method_id' => $order->shipping_method_id,
+                        'country_code' => array_flip(Order::ORDER_COUNTRIES)[$order->country]??'',
+                    ]));
+                    SkuInventory::incrementInventory($product->sku_id, $product->quantity, Warehouse::DEFAULT_EXCHANGE_ID);
+                }
+            }
+            $order->order_status = Order::ORDER_STATUS_REFUND;
+            $order->save();
+
+            admin_toastr('退件成功');
+            return redirect('/admin/sku-returns');
+        });
 
         return $form;
     }

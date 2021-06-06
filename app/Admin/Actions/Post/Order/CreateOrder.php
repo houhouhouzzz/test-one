@@ -80,8 +80,12 @@ class CreateOrder extends Action
             'numeric' => '总价必须为数字',
             'min' => '总价最小值为0.01',
         ]);
-        Admin::script(
-            <<<JS
+        Admin::script($this->script());
+    }
+
+    protected function script()
+    {
+        return <<<JS
 (function () {
     $('input[name="lat_lon"]').on('input', (e)=>{
         let lat_lon = $(e.target).val();
@@ -110,9 +114,9 @@ class CreateOrder extends Action
         }
     })
 })();
-JS
-        );
+JS;
     }
+
 
     public function html()
     {

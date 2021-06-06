@@ -561,7 +561,20 @@ p {
     border-bottom: 1px solid #dcdcdc
 }
 
+.gift-option-title {
+    width: 100%;
+    padding: .3rem 0;
+    height: 1.65rem;
+}
+
 .option-title img {
+    width: 1.2rem;
+    height: 1.2rem;
+    margin: 0 .2rem;
+    float: left
+}
+
+.gift-option-title img {
     width: 1.2rem;
     height: 1.2rem;
     margin: 0 .2rem;
@@ -611,6 +624,11 @@ p {
     font-size: .26rem;
     color: #9fa0a0;
     margin-bottom: .2rem
+}
+
+.giftAllOption {
+    font-size: .26rem;
+    color: #9fa0a0;
 }
 
 .option-btn {
