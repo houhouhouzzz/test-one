@@ -39,28 +39,29 @@ class Sku extends Model
             ->where('order_products.sku_id', $this->id)->count();
     }
 
-    protected function modify($product_id, $data){
-        $old_sku_ids = self::where(compact('product_id'))->whereStatus(self::STATUS_ONLINE)->get()->map->id->toArray();
+    protected function modify(Product $product, $data){
+        $old_sku_ids = self::where('product_id', $product->id)->whereStatus(self::STATUS_ONLINE)->get()->map->id->toArray();
         $new_sku_ids = [];
+        $data = $this->formatSaveSkuData($data);
         foreach ($data as $datum){
-            $sku_id = array_get($datum, 'id', 0);
-            $sku = self::find($sku_id);
+            $main_option = array_get( $datum, 'main_option_value', '');
+            $option_values = array_column(array_get($datum, 'options', []), 'option_value');
+            $options = is_array($option_values)?join('', $option_values):'';
+            $sku_no = Sku::genSku($product, $main_option, $options);
+            $sku = self::where('sku', $sku_no)->first();
             if(!$sku){
                 $sku = new self();
             }
-            if(!$sku->id){
-                $sku->sku = $this->genSku();
-            }
+            $sku->sku = $sku->genSku($product, $main_option, $options);
+            $sku->main_option = array_get($datum, 'main_option', 0);
+            $sku->main_option_value = array_get($datum, 'main_option_value', '');
             $sku->image = array_get($datum, 'image', '');
-            $sku->product_id = $product_id;
-            $sku->save();
-            $sku->sku = $sku->genSku();
+            $sku->product_id = $product->id;
             $sku->save();
             $options = array_get($datum, 'options', []);
             SkuOption::modify($sku->id, $options);
             $new_sku_ids[] = $sku->id;
-            SkuInventory::createSkuInventory($sku_id);
-
+            SkuInventory::createSkuInventory($sku->id);
         }
         if($diff_ids = array_diff($old_sku_ids, $new_sku_ids)){
             Sku::whereIn('id', $diff_ids)->update(['status'=> self::STATUS_OFFLINE]);
@@ -68,11 +69,60 @@ class Sku extends Model
 
     }
 
-    public function genSku(){
-        if($this->id){
-            return Util::getNumber($this->id, Sku::NUMBER_PREFIX);
+    public function formatSaveSkuData($data){
+        $return_data = [];
+        foreach ($data as $datum){
+            $main_option = current($datum['main_option']);
+            $datum['main_option'] = $main_option?$main_option['option_id']:0;
+            $datum['main_option_value'] =$main_option?$main_option['option_value']:'';
+            $options = array_filter( array_get($datum, 'options', []));
+            $option_map = array_column($options, 'option_value', 'option_id');
+            array_walk($option_map , function (&$option_item){
+                $option_item = array_filter(explode(',', $option_item));
+            });
+            $option_explodes = $this->dikaer($option_map);
+            if(is_array($option_explodes)){
+                foreach ($option_explodes as $option_explode){
+                    $i = 0;
+                    $tmp_options = $options;
+                    foreach ($tmp_options as $key => $tmp_option){
+                        $tmp_options[$key]['option_value'] = $option_explode[$i];
+                        $i++;
+                    }
+                    $return_datum = $datum;;
+                    $return_datum['options'] = $tmp_options;
+                    $return_data[] = $return_datum;
+                }
+            }else{
+                $return_data[] = array_merge(
+                    $datum,
+                    ['options' => []]
+                );
+            }
         }
-        return uniqid();
+        return $return_data;
+    }
+
+    public function dikaer($arr)
+    {
+        $arr1 = array();
+        $result = array_shift($arr);
+        while ($arr2 = array_shift($arr)) {
+            $arr1 = $result;
+            $result = array();
+            foreach ($arr1 as $v) {
+                foreach ($arr2 as $v2) {
+                    if (!is_array($v)) $v = array($v);
+                    if (!is_array($v2)) $v2 = array($v2);
+                    $result[] = array_merge_recursive($v, $v2);
+                }
+            }
+        }
+        return $result;
+    }
+
+    protected function genSku($product, $main_option, $options){
+        return $product->product_no . '-' . $main_option . $options;
     }
 
 }

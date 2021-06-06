@@ -26,7 +26,6 @@ class OrderCreateRequest extends FormRequest
     public function rules()
     {
         return[
-            'sku_id' => 'required|exists:skus,id',
             'quantity' => 'required|int|min:1',
             'currency_code' => 'required|string|in:' . join(',', array_column(Product::PRICE_COLUMNS, 'currency_code')),
 
@@ -43,8 +42,6 @@ class OrderCreateRequest extends FormRequest
     public function messages()
     {
         return [
-            'sku_id.required' => 'MUST SELECT PRODUCT',
-            'sku_id.exists' => 'THE PRODUCT NOT FOUND',
             'quantity.required' => 'QUANTITY IS MUST CHOOSE',
             'quantity.int' => 'QUANTITY IS NOT A NUMBER',
             'quantity.min' => 'QUANTITY NUMBER IS ERROR',

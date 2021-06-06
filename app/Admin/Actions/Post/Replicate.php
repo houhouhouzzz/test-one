@@ -17,9 +17,7 @@ class Replicate extends RowAction
         if($model instanceof Product){
             DB::transaction(function () use($model) {
                 $new_model = $model->replicate();
-                $new_model->product_no = $new_model->genProductNo();
-                $new_model->save();
-                $new_model->product_no = $new_model->genProductNo();
+                $new_model->product_no = $new_model->product_no . rand(1,100);
                 $new_model->save();
                 foreach ($model->skus as $sku){
                     /**
@@ -27,8 +25,7 @@ class Replicate extends RowAction
                      */
                     $new_sku = $sku->replicate();
                     $new_sku->product_id = $new_model->id;
-                    $new_sku->save();
-                    $new_sku->sku = $new_sku->genSku();
+                    $new_sku->sku = Sku::genSku($new_model, $sku->mian_option_value, $sku->options->map->option_value->implode(''));
                     $new_sku->save();
                     $new_sku_options = [];
                     foreach ($sku->options as $option){

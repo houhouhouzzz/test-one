@@ -4,7 +4,6 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Post\Product\JumpCategoryUrl;
 use App\Admin\Actions\Post\Product\JumpProductUrl;
-use App\Admin\Actions\Post\Product\JumpProductUrl2;
 use App\Admin\Actions\Post\Product\ProductEdit;
 use App\Admin\Actions\Post\Replicate;
 use App\Extensions\Util;
@@ -16,6 +15,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 use Encore\Admin\Widgets\Table;
+use Illuminate\Http\Request;
 
 class ProductController extends AdminController
 {
@@ -38,6 +38,8 @@ class ProductController extends AdminController
         $grid->expandFilter();
         $grid->disableCreateButton();
         $grid->disableRowSelector();
+        $grid->disableExport();
+
         $grid->actions(function($tool){
             $tool->disableDelete();
             $tool->disableView();
@@ -85,13 +87,7 @@ class ProductController extends AdminController
             return '';
         })->image();
         $grid->column('product_no', __('货号'))->sortable();
-        $grid->column('title', __('产品名称'))->expand(function ($model) {
-            $skus = $model->front_children;
-            array_walk($skus ,function (&$value){
-                unset($value['image']);
-            });
-            return new Table(['SKU_ID', 'SKU', '属性'], $skus);
-        });
+        $grid->column('title', __('产品名称'));
 
         $grid->column('category_id', __('admin.category_id'))
             ->editable('select', Category::formatKeyValue('id', 'name'));
@@ -104,11 +100,8 @@ class ProductController extends AdminController
             return sprintf('<a target="_blank" href="%s">%s</a>', $link, $link);
         });
 
-//            ->display(function($in_list){
-//            return Product::in_list_maps()[$in_list]?:'';
-//        });
+
         $grid->column('created_at', __('上架时间'));
-//        $grid->column('updated_at', __('admin.updated_at'));
 
         return $grid;
     }
@@ -308,57 +301,7 @@ class ProductController extends AdminController
     public function store(){
         request()->validate(
             [
-                'title' => 'required|string',
-                'category_id' => 'required|int',
-                'cost' => 'required|int:1',
-                'weight' => 'required|numeric',
-                'sa_price' => 'required|numeric',
-                'ae_price' => 'required|numeric',
-                'qa_price' => 'required|numeric',
-                'kw_price' => 'required|numeric',
-                'bh_price' => 'required|numeric',
-                'om_price' => 'required|numeric',
-                'options' => 'required|array|min:1'
-            ],[
-                'title.required' => '标题必填',
-                'title.string' => '标题必须为字符串',
-                'category_id.required' => '分类必选',
-                'category_id.int' => '该分类不符合规范',
-                'cost.required' => '进货底价必填',
-                'cost.int' => '进货底价最小为1',
-                'weight.required' => '重量必填',
-                'weight.numeric' => '必须是数字',
-                'sa_price.required' => 'sa 价格必填',
-                'ae_price.required' => 'ae 价格必填',
-                'qa_price.required' => 'qa 价格必填',
-                'kw_price.required' => 'kw 价格必填',
-                'bh_price.required' => 'bh 价格必填',
-                'om_price.required' => 'om 价格必填',
-                'options.required' => '属性选择必须选',
-                'options.min' => '属性选择最少选择一个',
-            ]
-        );
-
-        try{
-            $post = request()->all();
-            $product_id = Product::modify(new Product(),$post);
-        }catch (\Exception $e){
-            return response()->json(['message' => $e->getMessage()], 406);
-        }
-
-        return response()->json(Product::find($product_id), 200);
-    }
-
-    public function update($id){
-        $post = request()->all();
-        if(isset($post['value']) && !empty($post['name'])){
-            $product = Product::findOrFail($id);
-            $product->{$post['name']} = $post['value'];
-            $product->save();
-            return ['display'=> [], 'message'=> "更新成功 !", 'status'=> true];
-        }
-        request()->validate(
-            [
+                'product_no' => 'required|string',
                 'title' => 'required|string',
                 'category_id' => 'required|int',
                 'cost' => 'required|numeric',
@@ -369,8 +312,10 @@ class ProductController extends AdminController
                 'kw_price' => 'required|numeric',
                 'bh_price' => 'required|numeric',
                 'om_price' => 'required|numeric',
-                'options' => 'required|array|min:1'
+//                'options' => 'required|array|min:1'
             ],[
+                'product_no.required' => '货号必填',
+                'product_no.string' => '标题必须为字符串',
                 'title.required' => '标题必填',
                 'title.string' => '标题必须为字符串',
                 'category_id.required' => '分类必选',
@@ -386,7 +331,61 @@ class ProductController extends AdminController
                 'bh_price.required' => 'bh 价格必填',
                 'om_price.required' => 'om 价格必填',
                 'options.required' => '属性选择必须选',
-                'options.min' => '属性选择最少选择一个',
+//                'options.min' => '属性选择最少选择一个',
+            ]
+        );
+
+//        try{
+            $post = request()->all();
+            $product_id = Product::modify(new Product(),$post);
+//        }catch (\Exception $e){
+//            return response()->json(['message' => $e->getMessage()], 406);
+//        }
+
+        return response()->json(Product::find($product_id), 200);
+    }
+
+    public function update($id){
+        $post = request()->all();
+        if(isset($post['value']) && !empty($post['name'])){
+            $product = Product::findOrFail($id);
+            $product->{$post['name']} = $post['value'];
+            $product->save();
+            return ['display'=> [], 'message'=> "更新成功 !", 'status'=> true];
+        }
+        request()->validate(
+            [
+                'product_no' => 'required|string',
+                'title' => 'required|string',
+                'category_id' => 'required|int',
+                'cost' => 'required|numeric',
+                'weight' => 'required|numeric',
+                'sa_price' => 'required|numeric',
+                'ae_price' => 'required|numeric',
+                'qa_price' => 'required|numeric',
+                'kw_price' => 'required|numeric',
+                'bh_price' => 'required|numeric',
+                'om_price' => 'required|numeric',
+//                'options' => 'required|array|min:1'
+            ],[
+                'product_no.required' => '货号必填',
+                'product_no.string' => '标题必须为字符串',
+                'title.required' => '标题必填',
+                'title.string' => '标题必须为字符串',
+                'category_id.required' => '分类必选',
+                'category_id.int' => '该分类不符合规范',
+                'cost.required' => '进货底价必填',
+                'cost.numeric' => '进货底价必须是数字',
+                'weight.required' => '重量必填',
+                'weight.numeric' => '重量必须是数字',
+                'sa_price.required' => 'sa 价格必填',
+                'ae_price.required' => 'ae 价格必填',
+                'qa_price.required' => 'qa 价格必填',
+                'kw_price.required' => 'kw 价格必填',
+                'bh_price.required' => 'bh 价格必填',
+                'om_price.required' => 'om 价格必填',
+                'options.required' => '属性选择必须选',
+//                'options.min' => '属性选择最少选择一个',
             ]
         );
 
@@ -410,6 +409,11 @@ class ProductController extends AdminController
             ->header('商品')
             ->description('编辑')
             ->body(view('product.edit', ['name' => '初始化数据', 'product' => $product])->render());
+    }
+
+    public function product(Request $request){
+        $q = $request->get('q');
+        return Product::where('product_no', 'like', "%$q%")->paginate(null, ['id', 'product_no as text']);
     }
 
 }

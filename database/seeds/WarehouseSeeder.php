@@ -14,11 +14,11 @@ class WarehouseSeeder extends Seeder
         $base_data = [
             [
                 'id' => 1,
-                'name' => '国内仓(默认)'
+                'name' => '国内仓'
             ],
             [
                 'id' => 2,
-                'name' => '国外仓(默认)'
+                'name' => '国外仓'
             ],
         ];
         foreach ($base_data as $base_datum){

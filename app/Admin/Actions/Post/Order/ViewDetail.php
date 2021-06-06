@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Actions\Post;
+namespace App\Admin\Actions\Post\Order;
 
 use App\Extensions\Util;
 use App\Model\Order;

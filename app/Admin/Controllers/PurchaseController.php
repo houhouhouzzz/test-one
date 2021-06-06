@@ -31,6 +31,8 @@ class PurchaseController extends AdminController
 
         $grid->model()->where('status', '<', Purchase::STATUS_DELETE);
 
+        $grid->disableExport();
+
         $grid->actions(function($tool){
             $tool->disableView();
         });
@@ -109,7 +111,7 @@ class PurchaseController extends AdminController
 
         $form->select('sku_id', __('Sku'))->rules('required', [
             'required' => 'sku必选',
-        ])->value(request()->get('sku_id', 0))->options(function ($id) {
+        ])->options(function ($id) {
             $sku = Sku::find($id);
             if ($sku) {
                 return [$sku->id => $sku->sku];
@@ -119,9 +121,9 @@ class PurchaseController extends AdminController
             'required' => '标题必填',
             'min' => '最小值为1',
         ]);
-        $form->image('image_url', '采购凭证(图片)')->removable()->downloadable()->rules('required',[
-            'required' => '采购凭证(图片)必填',
-        ]);
+//        $form->image('image_url', '采购凭证(图片)')->removable()->downloadable()->rules('required',[
+//            'required' => '采购凭证(图片)必填',
+//        ]);
         $form->decimal('total', __('采购价格'))->rules('required|min:0.01', [
             'required' => '采购价格必填',
             'min' => '最小值为0.01',

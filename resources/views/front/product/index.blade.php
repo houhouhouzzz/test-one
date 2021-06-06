@@ -114,7 +114,8 @@
         <div style="height: 0.98rem;">
         </div>
         <div class="ban" style="width: 100%;">
-            <img src="{{\App\Extensions\Util::to($product->top_picture)}}" alt="" style="width: 100%;" />
+            <div id="divs2" style="overflow: hidden; display: flex; position: relative;">
+            </div>
         </div>
         <div class="productName">
             <div class="pricecontainer">
@@ -147,39 +148,54 @@
         </div>
 
         <div class="imgContainer visible-img-detail" data-gtm-vis-first-on-screen-13511651_20="2044" data-gtm-vis-total-visible-time-13511651_20="100" data-gtm-vis-has-fired-13511651_20="1">
-            <?php $i = 1; ?>
-            @foreach($product->pictures as $picture)
+            <?php $i = 5; ?>
+                @if($i == $product->video_position && $product->video_link)
+                    <div class="video" style="font-family: Helvetica;">
+                        <video src="{{$product->video_link}}" controls="controls">
+                            {{--                                                       poster="{{$product->pictures?\App\Extensions\Util::to($product->pictures[0]) : ''}}"--}}
+                        </video>
+                    </div>
+                @endif
+            @foreach($product->detail_pictures as $k => $picture)
             <div>
                 <img src="{{\App\Extensions\Util::to($picture)}}" alt="" />
                 <div class="imgText" style="display: none;"></div>
                 <div class="imgText" style="display: none;"></div>
             </div>
-                @if($i == $product->video_position && $product->video_link)
-                        <div class="video" style="font-family: Helvetica;">
-{{--                            <video src="{{$product->video_link}}" controls="controls">--}}
-                                    {{--                   poster="{{$product->pictures?\App\Extensions\Util::to($product->pictures[0]) : ''}}"--}}
 
-{{--                            </video>--}}
-                        </div>
-                @endif
                 <?php $i++ ?>
+                    @if($i == $product->video_position && $product->video_link)
+                        <div class="video" style="font-family: Helvetica;">
+                            <video src="{{$product->video_link}}" controls="controls">
+                                {{--                                                       poster="{{$product->pictures?\App\Extensions\Util::to($product->pictures[0]) : ''}}"--}}
+                            </video>
+                        </div>
+                    @endif
             @endforeach
-            @foreach($product->children as $child)
+            @foreach($product->sku_pictures as $child)
                 <div>
-                    <img src="{{\App\Extensions\Util::to($child['image'])}}" alt="" />
+                    <img src="{{\App\Extensions\Util::to($child)}}" alt="" />
                     <div class="imgText" style="display: none;"></div>
                     <div class="imgText" style="display: none;"></div>
                 </div>
                 @if($i == $product->video_position && $product->video_link)
                     <div class="video" style="font-family: Helvetica;">
-                        <video src="{{$product->video_link}}" controls="controls"
+                        <video src="{{$product->video_link}}" controls="controls">
                                 {{--                   poster="{{$product->pictures?\App\Extensions\Util::to($product->pictures[0]) : ''}}"--}}
-                        >
                         </video>
                     </div>
                 @endif
                 <?php $i++ ?>
             @endforeach
+                @if($gift_product)
+                    @foreach($gift_product->pictures as $picture)
+                        <div>
+                            <img src="{{\App\Extensions\Util::to($picture)}}" alt="" />
+                            <div class="imgText" style="display: none;"></div>
+                            <div class="imgText" style="display: none;"></div>
+                        </div>
+                    @endforeach
+                @endif
             @if($i<=$product->video_position && $product->video_link)
                 <div class="video" style="font-family: Helvetica;">
                     <video src="{{$product->video_link}}" controls="controls"
@@ -210,33 +226,33 @@
 {{--                </div>--}}
 {{--            </div>--}}
 {{--        </div>--}}
-        <div class="Consumer-Services english visible-info-contactus" style="display: block;" data-gtm-vis-first-on-screen-13511651_21="202" data-gtm-vis-total-visible-time-13511651_21="100" data-gtm-vis-has-fired-13511651_21="1">
-            <div id="accordion2" role="tablist" aria-multiselectable="true" class="panel-group">
-                <div class="panel panel-default">
-                    <div role="tab" class="panel-heading">
-                        <div role="button" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" class="panel-title collapsed" style="overflow: hidden;">
-                            <div style="float: left; color: rgb(249, 62, 62);">
-                                How to Order?
-                            </div>
+{{--        <div class="Consumer-Services english visible-info-contactus" style="display: block;" data-gtm-vis-first-on-screen-13511651_21="202" data-gtm-vis-total-visible-time-13511651_21="100" data-gtm-vis-has-fired-13511651_21="1">--}}
+{{--            <div id="accordion2" role="tablist" aria-multiselectable="true" class="panel-group">--}}
+{{--                <div class="panel panel-default">--}}
+{{--                    <div role="tab" class="panel-heading">--}}
+{{--                        <div role="button" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" class="panel-title collapsed" style="overflow: hidden;">--}}
+{{--                            <div style="float: left; color: rgb(249, 62, 62);">--}}
+{{--                                How to Order?--}}
+{{--                            </div>--}}
 {{--                            <img src="https://sp.gcc-friday.com/static/singlepage/img/xiangxia.jpg" alt="" class="fold " />--}}
-                        </div>
-                    </div>
-                    <div id="collapseTwo" role="tabpanel" aria-expanded="true" class="panel-collapse collapse in">
-                        <div class="panel-body service-text">
-                            <p><span>1.</span>Click the Shop Now button and Choose your color and size (if so)</p>
-                            <p><span>2.</span>Fill in your name, phone number, delivery address</p>
-                            <p><span>3.</span>Click the Confirm button</p>
-                            <p><span>4.</span>Wait for us to contact you</p>
-                            <p> Any inquiry please contact WhatsApp
-                                <a href="https://api.whatsapp.com/send?phone={{\App\Model\WhatApp::getCurrentWhatApp()}}&amp;text=hi%2CI+want+to+ask+something+about+{{$product->product_no}}+{{$price_info['currency_code'] . ' ' . $product->price}}+&amp;source=&amp;data=" target="_blank">
-                                    <span style="color: rgb(249, 62, 62); border-bottom: 0.01rem solid rgb(249, 62, 62);">{{\App\Model\WhatApp::getCurrentWhatApp()}}</span>
-                                </a>
-                                <br /> Expected delivery time: about 10-20 days. </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div id="collapseTwo" role="tabpanel" aria-expanded="true" class="panel-collapse collapse in">--}}
+{{--                        <div class="panel-body service-text">--}}
+{{--                            <p><span>1.</span>Click the Shop Now button and Choose your color and size (if so)</p>--}}
+{{--                            <p><span>2.</span>Fill in your name, phone number, delivery address</p>--}}
+{{--                            <p><span>3.</span>Click the Confirm button</p>--}}
+{{--                            <p><span>4.</span>Wait for us to contact you</p>--}}
+{{--                            <p> Any inquiry please contact WhatsApp--}}
+{{--                                <a href="https://api.whatsapp.com/send?phone={{\App\Model\WhatApp::getCurrentWhatApp()}}&amp;text=hi%2CI+want+to+ask+something+about+{{$product->product_no}}+{{$price_info['currency_code'] . ' ' . $product->price}}+&amp;source=&amp;data=" target="_blank">--}}
+{{--                                    <span style="color: rgb(249, 62, 62); border-bottom: 0.01rem solid rgb(249, 62, 62);">{{\App\Model\WhatApp::getCurrentWhatApp()}}</span>--}}
+{{--                                </a>--}}
+{{--                                <br /> Expected delivery time: about 10-20 days. </p>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
         <div class="TermsContainer">
             @foreach($term_services as $term_service)
             <div>
@@ -273,9 +289,34 @@
                         Product details &nbsp;&nbsp; (Please select)
                     </div>
                     <div class="option-btn-area" style="">
-                        <div class="option-btn" v-for="(sku, index) in skus" v-bind:class="{optionActive : sku_index == index}" @click="changeSku(index)" v-text="sku.options" style="float: left; margin-right: 0.3rem; position: relative;">
+                        <div style="width:100%;min-height:0.7rem;max-height: 2.8rem" v-for="(main_button, main_select_title) in skus.main_option">
+                            <div v-text="main_select_title" style="float: left; margin-right: 0.3rem; position: relative;color: #9fa0a0;font-size: .21rem;padding: .05rem .2rem;width: 1rem;"></div>
+                            <div class="option-btn" v-for="(value, index) in main_button"  v-bind:class="{optionActive : main_option_value == index}" @click="changeMainOption(index)" v-text="index" style="float: left; margin-right: 0.3rem; position: relative;">
+                            </div>
+                        </div>
+                        <div style="width:100%;min-height:0.7rem;max-height: 2.8rem" class="clearfix" v-for="(option_value, option_key) in options">
+                            <div v-text="option_value.option_name" style="float: left; margin-right: 0.3rem; position: relative;color: #9fa0a0;font-size: .21rem;padding: .05rem .2rem;width: 1rem;"></div>
+                            <div class="option-btn" v-for="(value, index) in option_value.option_value"  v-bind:class="{optionActive : value == sku_options[option_key]}" @click="changeSku(option_key,value)" v-text="value" style="float: left; margin-right: 0.3rem; position: relative;">
+                            </div>
                         </div>
                     </div>
+                    @if($gift_product)
+                    <div class="allOption">
+                        {{$gift_product->gift_title}}
+                    </div>
+                    <div class="option-btn-area" style="">
+                        <div style="width:100%;min-height:0.7rem;max-height: 2.8rem" v-for="(main_button, main_select_title) in gift_skus.main_option">
+                            <div v-text="main_select_title" style="float: left; margin-right: 0.3rem; position: relative;color: #9fa0a0;font-size: .21rem;padding: .05rem .2rem;width: 1rem;"></div>
+                            <div class="option-btn" v-for="(value, index) in main_button"  v-bind:class="{optionActive : gift_main_option_value == index}" @click="changeGiftMainOption(index)" v-text="index" style="float: left; margin-right: 0.3rem; position: relative;">
+                            </div>
+                        </div>
+                        <div style="width:100%;min-height:0.7rem;max-height: 2.8rem" class="clearfix" v-for="(option_value, option_key) in gift_options">
+                            <div v-text="option_value.option_name" style="float: left; margin-right: 0.3rem; position: relative;color: #9fa0a0;font-size: .21rem;padding: .05rem .2rem;width: 1rem;"></div>
+                            <div class="option-btn" v-for="(value, index) in option_value.option_value"  v-bind:class="{optionActive : value == gift_sku_options[option_key]}" @click="changeGiftSku(option_key,value)" v-text="value" style="float: left; margin-right: 0.3rem; position: relative;">
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                     <div class="quantity" style="overflow: hidden;">
                         <div class="quantity-title english" style="display: block;">
                             Quantity
@@ -284,7 +325,7 @@
                             <div class="quantity-sub" @click="decQuantity">
                                 -
                             </div>
-                            <div class="quantity-number" v-model="quantity" v-text="quantity">
+                            <div class="quantity-number" v-text="quantity">
 
                             </div>
                             <div class="quantity-add" @click="incQuantity">
@@ -303,7 +344,7 @@
                         Shipping Fee:
                         <div class="input-total" style="float: right;">
                             Free Shipping
-                        </div>State
+                        </div>
                     </div>
                     <div class="input-div english" style="display: block;">
                         Payment Method:
@@ -378,8 +419,7 @@
                                 <textarea id="addressdetail"
                                           class="addressinput"
                                           v-model="address"
-                                          maxlength="350"
-                                          placeholder="Detail Street, building , etc  الرجاء كتابة العنوان كاملاً (اسم المدينة + اسم الحي  + اسم الشارع + رقم المنزل + أقرب علامة مميزة للمنزل اذا وجد ) اذا لم يتم كتابة العنوان كامل سيتم تجاهل الطلبية شكرا لتعاونكم">
+                                          maxlength="350">
                                 </textarea>
                             </div>
                             <span class="musticon">*</span>
@@ -403,36 +443,84 @@
 </body>
 <script src="/static/js/sweetAlert.min.js" type="text/javascript"></script>
 <script src="/static/js/axios.min.js"></script>
+<script src="/static/js/lbt.js"></script>
 <script src="/static/js/jquery.min.js" type="text/javascript"></script>
 <script src="/static/js/vue.min.js" type="text/javascript"></script>
 <script src="/static/js/select2.min.js" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function ($) {
+        var data = {
+            product_id : {{$product->id}},
+            skus : {!! json_encode($product->front_children) !!},
+            main_option_value : '{{$product->skus->first()->main_option_value}}',
+            option : {},
+            options : {},
+            sku_options : {},
+            gift_skus : {},
+            gift_main_option_value : '',
+            gift_options : {},
+            gift_sku_options : {},
+            gift_product_id : 0,
+            total : {{$product->price}},
+            currency_code : '{{$price_info['currency_code']}}',
+            total_show : '{{$price_info['currency_code'] . ' ' . $product->price}}',
+            price : {{$product->price}},
+            quantity : 1,
+            sku : '',
+            sku_image : '',
+            country_code : '{{$country}}',
+            customer_name : '',
+            customer_phone : '',
+            whats_app : '',
+            pre_phone : '{{$price_info['pre_phone']}}',
+            address : '',
+            phone_length : {{$price_info['phone_length']}},
+            phone_length_map : {!! json_encode(array_column(\App\Model\Product::PRICE_COLUMNS, 'phone_length', 'pre_phone' )) !!},
+            price_infos : {!! json_encode(\App\Model\Product::PRICE_COLUMNS) !!},
+            address_note : '',
+        };
+        @if($gift_product)
+            data.gift_skus = {!! json_encode($gift_product->front_children) !!};
+            data.gift_main_option_value = '{{$gift_product->skus->first()->main_option_value}}';
+            data.gift_options = {};
+            data.gift_sku_options = {};
+            data.gift_product_id = {{$gift_product->id}};
+        @endif
+
         var vm = new Vue({
             el: '#option',
-            data: {
-                skus : {!! json_encode($product->front_children) !!},
-                total : {{$product->price}},
-                currency_code : '{{$price_info['currency_code']}}',
-                total_show : '{{$price_info['currency_code'] . ' ' . $product->price}}',
-                price : {{$product->price}},
-                quantity : 1,
-                sku_index : 0,
-                sku_id : {{data_get( $product->front_children, '0.id', 0)}},
-                sku : '{{data_get( $product->front_children, '0.sku', '')}}',
-                sku_image : '{{data_get( $product->front_children, '0.image', '')}}',
-                country_code : '{{$country}}',
-                customer_name : '',
-                customer_phone : '',
-                whats_app : '',
-                pre_phone : '{{$price_info['pre_phone']}}',
-                address : '',
-                phone_length : {{$price_info['phone_length']}},
-                phone_length_map : {!! json_encode(array_column(\App\Model\Product::PRICE_COLUMNS, 'phone_length', 'pre_phone' )) !!},
-                price_infos : {!! json_encode(\App\Model\Product::PRICE_COLUMNS) !!},
-                address_note : '',
+            data: data,
+            mounted:function(){
+                this.sku_image = this.getSkuImage();
+                this.options = this.getOptions();
+                this.genSkuOptions();
+                @if($gift_product)
+                    this.gift_options = this.getGiftOptions();
+                    this.genGiftSkuOptions();
+                @endif
             },
             methods:{
+                genGiftSkuOptions : function(){
+                    for (let key in this.gift_options) {
+                        this.gift_sku_options[key] = this.gift_options[key]['option_value'][0];
+                    }
+                },
+                genSkuOptions : function(){
+                    for (let key in this.options) {
+                        this.sku_options[key] = this.options[key]['option_value'][0];
+                    }
+                },
+                getSkuImage : function(){
+                    for (let key in this.skus.main_option) {
+                        return this.skus.main_option[key][this.main_option_value]['image'];
+                    }
+                },
+                getGiftOptions : function(){
+                    return this.gift_skus.options[this.gift_main_option_value];
+                },
+                getOptions : function(){
+                    return this.skus.options[this.main_option_value];
+                },
                 numChange : function(){
                     if(this.customer_phone.length>this.phone_length)
                     {
@@ -458,16 +546,30 @@
                     vm.total = vm.price * vm.quantity;
                     vm.total_show = vm.currency_code + ' ' + vm.total;
                 },
-                changeSku : function(index){
-                    this.sku_index = index;
-                    this.sku_id = this.skus[index]['id'];
-                    this.sku_image = this.skus[index]['image'];
+                changeSku : function(key,value){
+                    this.sku_options[key] = value;
+                    this.$forceUpdate()
+                },
+                changeGiftSku : function(key,value){
+                    this.gift_sku_options[key] = value;
+                    this.$forceUpdate()
+                },
+                changeMainOption : function(key){
+                    this.main_option_value = key;
+                    this.sku_image = vm.getSkuImage();
+                    this.options = vm.getOptions();
+                    vm.genSkuOptions();
+                },
+                changeGiftMainOption : function(key){
+                    this.gift_main_option_value = key;
+                    this.gift_options = vm.getGiftOptions();
+                    vm.genGiftSkuOptions();
                 },
                 beforeSend : function (){
                     if(!this.$options.methods.checkSend()) return;
                     axios.post('{{url('/order')}}', vm.$data)
                         .then(function (response) {
-                            swal("Thank you for your purchase!", 'Your order has been created successfully.<br>We’ll contact you to confirm it within 24H', 'success', {
+                            swal("Thank you for your purchase!", 'Your order has been created successfully.We’ll contact you to confirm it within 24H شكرا لكم. سنتصل بكم لتأكيد الطلبية خلال 24 ساعة.', 'success', {
                                 confirmButton: true,
                             }).then(function(){
                                 window.location.href = '{{\App\Extensions\Util::to('/category/' . $product->category_id)}}';
@@ -545,5 +647,9 @@
         })
         $("#country_select").val(['{{ $country }}']).trigger('change');
     });
+    //调用
+    var imgs = {!! json_encode($product->main_pictures) !!}
+    var hrefs = ["#", "#2", "#3", "#4", '#5']
+    var lbt = lbimg("divs2", imgs,hrefs,3000).start()
 </script>
 </html>

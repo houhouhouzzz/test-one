@@ -37,6 +37,12 @@ class SkuReturnController extends AdminController
         $grid->disableActions();
         $grid->disableCreateButton();
         $grid->disableColumnSelector();
+        $grid->export(function ($export) {
+            $export->column('country_code', function ($value, $original) {
+                return Order::ORDER_COUNTRIES[$original]??'';
+            });
+        });
+
         $grid->filter(function ($filter){
             // 去掉默认的id过滤器
             $filter->disableIdFilter();

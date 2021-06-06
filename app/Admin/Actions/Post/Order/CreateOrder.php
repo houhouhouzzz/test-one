@@ -33,10 +33,10 @@ class CreateOrder extends Action
         $params['ip'] = Util::getIp();
         $params['ip_iso_code'] = Util::getInfoByIp($params['ip'], 'iso_code');
         $sku = Sku::where('sku', $params['sku'])->first();
-        $params['country_code'] =  array_flip( Order::ORDER_COUNTRIES)[$params['country']];
         $params['currency_code'] = Product::PRICE_COLUMNS[$params['country_code']]['currency_code'];
         $params['total'] = array_get($params, 'total', 1);
         $params['customer_phone'] = array_get($params, 'customer_phone', '');
+        $params['weight_total'] = $sku->product->weight * array_get($params, 'quantity', 1);
         $params['products'][] = [
             'product_id' => $sku->product_id,
             'product_name' => $sku->product->title,
@@ -59,10 +59,7 @@ class CreateOrder extends Action
         ])->placeholder(join('/',array_column( Product::PRICE_COLUMNS, 'pre_phone')) . '开头');
         $this->text('what_apps', 'whatapps');
         $this->text('lat_lon', '经纬度');
-        $this->text('country', '国家')->rules('required|in:'.join(',', Order::ORDER_COUNTRIES), [
-            'required' => '国家必填',
-            'in'=>'国家必须在' . join(',', Order::ORDER_COUNTRIES) . '中',
-        ]);;
+        $this->select('country_code', '国家')->value('sa')->options(Order::ORDER_COUNTRIES);
         $this->text('state', 'state');
         $this->text('city', 'city');
         $this->text('district', 'district');

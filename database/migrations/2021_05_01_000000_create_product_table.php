@@ -30,6 +30,7 @@ class CreateProductTable extends Migration
             $table->decimal('om_price', 6,2)->nullable()->default(null);
             $table->decimal('cost', 6,2)->default(0)->comment('采购价');
             $table->string('pictures', 1024)->comment('主图');
+            $table->unsignedSmallInteger('main_option')->default(0)->comment('主属性');
             $table->tinyInteger('video_position')->default(5)->comment('主图');
             $table->string('video_link')->default('')->comment('主图');
             $table->integer('weight', false, true)->default(0)->comment('重量(g)');
@@ -56,12 +57,13 @@ class CreateProductTable extends Migration
             $table->timestamps();
         });
 
-
         Schema::create('skus', function (Blueprint $table) {
             $table->integerIncrements('id');
             $table->integer('product_id')->default(0)->comment('商品id');
             $table->string('sku')->comment('sku');
             $table->string('image')->comment('图片');
+            $table->unsignedSmallInteger('main_option')->default(0)->comment('主选项id');
+            $table->string('main_option_value')->default('')->comment('主选项值');
             $table->tinyInteger('status')->default(1)->comment('sku 状态');
             $table->timestamps();
         });

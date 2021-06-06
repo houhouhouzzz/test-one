@@ -8,6 +8,14 @@ class OrderProduct extends Model
 {
     public $timestamps = false;
 
+    CONST TYPE_NORMAL = 'normal';
+    CONST TYPE_GIFT = 'gift';
+
+    const TYPE_MAP = [
+        self::TYPE_NORMAL => '常规商品',
+        self::TYPE_GIFT => '赠品',
+    ];
+
     protected function addOrderProduct(Order $order, $data)
     {
         $order_product = new OrderProduct();
@@ -17,6 +25,7 @@ class OrderProduct extends Model
         $order_product->sku_id = $data['sku_id'];
         $order_product->quantity = $data['quantity'];
         $order_product->price = $data['price'];
+        $order_product->type = array_get($data, 'type', OrderProduct::TYPE_NORMAL);
         $order_product->save();
     }
 

@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use App\Extensions\HttpUtil;
 use App\Extensions\Util;
+use App\Model\Order;
+use App\Model\Sku;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
@@ -41,7 +43,23 @@ class test extends Command
      */
     public function handle()
     {
+        $order = Order::find(10018);
 
+        $product_desc = $product_weight = $ocean_code = $product_quantity = $product_cost = $product_sku =[];
+        $order->products->map(function ($product)use(&$product_desc, &$product_weight, &$ocean_code, &$product_quantity, &$product_cost, &$product_sku){
+            $product_desc[] = $product->product->description;
+            $product_weight[] = $product->product->weight;
+            $ocean_code[] = $product->product->ocean_number;
+            $product_quantity[] = $product->quantity;
+            $product_cost[] = $product->product->cost / 2 * 6.5;
+            $product_sku[] = $product->sku->sku;
+        });
+
+        dd([$product_desc, $product_weight, $product_quantity, $product_cost, $product_sku, $ocean_code]);
+        $order->products->product->map->description;
+
+        logger(file_get_contents('https://www.jq22.com/demo/jquerylbt202012090028/js/lbt.js'));
+dd(file_get_contents('https://www.jq22.com/demo/jquerylbt202012090028/js/lbt.js'));
         $url=sprintf( 'https://www.kuaidi100.com/chaxun?com=%s&nu=%s', 'shentong', '777046161790575');
         $client = new Client();
         $response = $client->request('GET', $url);

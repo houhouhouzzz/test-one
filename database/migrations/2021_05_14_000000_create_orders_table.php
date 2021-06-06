@@ -29,7 +29,7 @@ class CreateOrdersTable extends Migration
             $table->decimal('order_cost', 6, 2)->default(0)->comment('订单底价');
             $table->decimal('shipping_cost', 6, 2)->default(0)->comment('物流运费');
             $table->decimal('cod_cost', 6, 2)->default(0)->comment('cod费用');
-            $table->decimal('weight_total', 6, 2)->default(0)->comment('总重量');
+            $table->decimal('weight_total', 6, 3)->default(0)->comment('总重量(kg)');
             $table->tinyInteger('shipping_method_id')->default(1)->comment('物流公司');
             $table->tinyInteger('shipping_status')->default(1)->comment('物流状态');
             $table->dateTime('shipping_at')->nullable()->comment('物流状态');
@@ -53,6 +53,7 @@ class CreateOrdersTable extends Migration
             $table->integer('order_id');
             $table->integer('product_id');
             $table->string('product_name');
+            $table->string('type');
             $table->integer('sku_id');
             $table->integer('quantity');
             $table->decimal('price', 8,2)->default(0)->comment('订单商品单价');

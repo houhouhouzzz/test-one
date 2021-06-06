@@ -39,8 +39,11 @@ class OnceDefaultShippingExport implements FromCollection, WithHeadings, WithMap
 
     public function map($order): array
     {
+        list($product_desc, $product_weight, $product_quantity, $product_cost, $product_sku, $ocean_code)
+            = $this->formatProductInfo($order);
+
         return [
-            'guangzhou nashat',
+            $order->customer_name,
             $order->customer_name,
             $order->address,
             '',
@@ -53,14 +56,27 @@ class OnceDefaultShippingExport implements FromCollection, WithHeadings, WithMap
             '1',
             '',
             $order->order_no,
-            $order->products->first()->product->title,
-            $order->weight_total??$order->products->first()->product->weight*$order->products->first()->quantity,
-            $order->products->first()->quantity,
-            $order->products->first()->product->cost * $order->products->first()->quantity,
-            $order->products->first()->sku->sku,
-            $order->products->first()->product->ocean_number,
+            join(',', $product_desc),
+            join(',', $product_weight),
+            join(',', $product_quantity),
+            join(',', $product_cost),
+            join(',', $product_sku),
+            join(',', $ocean_code),
             'NCND',
             $order->total
         ];
+    }
+
+    public function formatProductInfo(Order $order){
+        $product_desc = $product_weight = $ocean_code = $product_quantity = $product_cost = $product_sku =[];
+        $order->products->map(function ($product)use(&$product_desc, &$product_weight, &$ocean_code, &$product_quantity, &$product_cost, &$product_sku){
+            $product_desc[] = $product->product->description;
+            $product_weight[] = $product->product->weight;
+            $ocean_code[] = $product->product->ocean_number;
+            $product_quantity[] = $product->quantity;
+            $product_cost[] = $product->product->cost / 2 * 6.5;
+            $product_sku[] = $product->sku->sku;
+        });
+        return [$product_desc, $product_weight, $product_quantity, $product_cost, $product_sku, $ocean_code];
     }
 }

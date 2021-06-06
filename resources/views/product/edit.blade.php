@@ -22,7 +22,18 @@
                     <div class="box-body">
                         <div class="fields-group">
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-4">
+                                    <div class=" ">
+                                        <label for="product_no" class="asterisk control-label">货号</label>
+                                        <div class="">
+                                            <div class="input-group">
+                                                <span class="input-group-addon"><i class="fa fa-pencil fa-fw"></i></span>
+                                                <input type="text" id="product_no" v-model="product_no" name="product_no" value="" class="form-control title" placeholder="输入 标题">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
                                     <div class=" ">
                                         <label for="title" class="asterisk control-label">标题</label>
                                         <div class="">
@@ -227,13 +238,26 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-7">
+                                <div class="col-md-5">
                                     <div class=" ">
-                                        <label for="options" class="asterisk control-label">属性选择</label>
+                                        <label for="options" class="asterisk control-label">主属性选择</label>
+                                        <div class="">
+                                            <select id="main_option" data-placeholder="请选择属性" class="form-control">
+                                                <option value="0" >请选择</option>
+                                                @foreach(\App\Model\Option::all()->toArray() as $option)
+                                                <option value="{{$option['id']}}" >{{$option['name']}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class=" ">
+                                        <label for="options" class="asterisk control-label">副属性选择</label>
                                         <div class="">
                                             <select id="options" multiple data-placeholder="请选择属性" class="form-control">
                                                 @foreach(\App\Model\Option::all()->toArray() as $option)
-                                                <option value="{{$option['id']}}" >{{$option['name']}}</option>
+                                                    <option value="{{$option['id']}}" >{{$option['name']}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -293,8 +317,8 @@
                                                 </ul>
                                                 <img width="100" :src="child.image" v-if="child.image">
                                             </td>
-                                            <td>
-                                                <input class="form-control" disabled type="text" v-model="child.sku" >
+                                            <td v-for="(main_option_child, main_option_index) in child.main_option" v-if="main_option_child">
+                                                <input class="form-control" @input="changeIn()" type="text" v-model="main_option_child.option_value" >
                                             </td>
                                             <td v-for="(option_child, option_index) in child.options" v-if="option_index && option_child">
                                                 <input class="form-control" @input="changeIn()" type="text" v-model="option_child.option_value" >
@@ -355,16 +379,19 @@
             video_position: '5',
             supplier_note: '',
             supplier_link: '',
+            main_option : '',
+            main_option_map:[],
                 options: [],
                 option_map:[],
                 cost: '',
                 pictures: [],
                 weight: '',
                 post: '{{url('admin/products')}}',
-                child_header : ['图片', 'SKU(保存后，自动生成)'],
+                child_header : ['图片'],
                 skus : [],
                 sku : {
                     'image' : '',
+                    'main_option' : [],
                     'options' : []
                 }
             }
@@ -386,16 +413,19 @@
             video_position: '{{$product->video_position}}',
                 supplier_link: '{{$product->supplier?$product->supplier->link:""}}',
                 supplier_note: '{{$product->supplier?$product->supplier->note:""}}',
+            main_option: {{$product->main_option}},
+            main_option_map:[],
                 options: {{json_encode( $product->options->map->id->toArray())}},
                 option_map:[],
                 cost: '{{$product->cost}}',
                 pictures: {!! json_encode( $product->pictures)!!},
                 weight: '{{$product->weight}}',
                 post: '{{url('admin/products/edit') . '/' . $product->id}}',
-                child_header : ['图片', 'SKU(保存后，自动生成)'],
+                child_header : ['图片'],
                 skus : {!! json_encode($product->children) !!},
                 sku : {
                     'image' : '',
+                    'main_option' : [],
                     'options' : [],
                     'sku' : ''
                 }
@@ -410,7 +440,6 @@
                     },
                     delSku : function(index){
                         vm.skus.splice(index, 1);
-                        console.log(vm.skus);
                     },
                     delSkuImage : function(index){
                         vm.skus[index]['image']='';
@@ -516,11 +545,27 @@
         window.vm = vm;
         $('#category_id').select2();
         $('#options').select2();
+        $('#main_option').select2();
         $('#video_position').select2();
         $('#category_id').on('change', function(){
             vm.category_id = $(this).select2('data')[0].id;
         })
+        $('#main_option').on('change', function(){
+            vm.main_option = dealSelectMethod($('#main_option').select2('data'))[0];
+            vm.main_option_map = dealSelectMap($('#main_option').select2('data'));
+            dealSkus();
+        })
         $('#options').on('change', function(){
+            {{--$("#main_option").val([{{ $product->main_option }}]).trigger('change');--}}
+            if($('#options').select2('data').length > 3){
+                swal('最多选择3个副属性', '', 'error', {
+                    dangerMode: true,
+                    confirmButton: true,
+                }).then(function(){
+                    $("#options").val(vm.options).trigger('change');
+                });
+                return false;
+            }
             vm.options = dealSelectMethod($('#options').select2('data'));
             vm.option_map = dealSelectMap($('#options').select2('data'));
             dealSkus();
@@ -530,15 +575,31 @@
         })
 
         function dealSkus(){
-            vm.child_header = ['图片', 'SKU(保存后，自动生成)'];
-            vm.sku = {image:'','options':[]};
+            vm.child_header = ['图片'];
+            vm.sku = {image:'', 'main_option':[], 'options':[]};
             let sku_options = [];
+            vm.main_option_map.forEach((value,key)=>{
+                vm.child_header.push(value + '(主属性)');
+                vm.sku.main_option[0] = {
+                    option_id : key,
+                    option_name : value,
+                    option_value : vm.sku.main_option[0]?vm.sku.main_option[0]['option_value']:''
+                };
+                vm.skus.forEach((sku, sku_index)=>{
+                    let main = [{
+                        option_id: key,
+                        option_name: value,
+                        option_value: sku.main_option?sku.main_option[0]['option_value']:'',
+                    }];
+                    vm.skus[sku_index].main_option = main;
+                })
+            });
             vm.option_map.forEach((value, key)=>{
                 if(value instanceof Array){
                     return true
                 }
                 if(vm.child_header.indexOf(value) == -1){
-                    vm.child_header.push(value);
+                    vm.child_header.push(value+'(多选项用,隔开)');
                 }
                 if(sku_options[value] == undefined){
                     sku_options[key] = {
@@ -565,6 +626,7 @@
                         }
                     }
                 }
+
             })
             vm.sku['options'] = sku_options;
         }
@@ -585,6 +647,7 @@
         }
         @if( ! empty($product->id))
         $("#options").val({{json_encode($product->options->map->id->toArray())}}).trigger('change');
+        $("#main_option").val([{{ $product->main_option }}]).trigger('change');
         $("#category_id").val([{{ $product->category_id }}]).trigger('change');
         @endif
 
@@ -605,8 +668,8 @@
             ,imageCrop : true
             ,formData : {}
             ,done: function (e,data) {
-                if(vm.pictures.length > 4){
-                    swal('主图最多5张', '', 'error', {
+                if(vm.pictures.length > 15){
+                    swal('图片最多上传15张', '', 'error', {
                         dangerMode: true,
                         confirmButton: true,
                     });

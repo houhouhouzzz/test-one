@@ -65,6 +65,7 @@ class Order extends Model
             $order->order_no = uniqid('on');
 
             $order->total = $data['total'];
+            $order->weight_total = $data['weight_total'];
             $order->currency_code = $data['currency_code'];
             $order->customer_name = $data['customer_name'];
             $order->customer_phone = $data['customer_phone'];

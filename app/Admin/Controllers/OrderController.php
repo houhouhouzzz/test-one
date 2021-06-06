@@ -6,12 +6,14 @@ use App\Admin\Actions\Post\Order\BatchStatus;
 use App\Admin\Actions\Post\Order\CreateOrder;
 use App\Admin\Actions\Post\Order\ExportOrderDataTemplate;
 use App\Admin\Actions\Post\Order\ImportOrderData;
-use App\Admin\Actions\Post\ViewDetail;
+use App\Admin\Actions\Post\Order\ViewDetail;
+use App\Admin\Actions\Post\Order\Edit;
 use App\Admin\Tools\OnceDefaultShipping;
 use App\Exporter\OrderExporter;
 use App\Exports\OnceDefaultShippingExport;
 use App\Extensions\Util;
 use App\Model\Order;
+use App\Model\OrderProduct;
 use App\Model\ShippingMethod;
 use App\Model\Sku;
 use App\Model\SkuInventory;
@@ -20,6 +22,7 @@ use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Widgets\Table;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -71,6 +74,7 @@ class OrderController extends AdminController
             $actions->disableView();
             $actions->disableEdit();
             $actions->add(new ViewDetail);
+            $actions->add(new Edit);
         });
 
         $grid->filter(function($filter){
@@ -83,12 +87,12 @@ class OrderController extends AdminController
                     });
                 }, 'Sku');
                 $filter->equal('order_type', '订单类型')->select(Order::ORDER_TYPE_MAP);
-                $filter->equal('order_status', '订单状态')->select(Order::ORDER_STATUS_MAP);
             });
             $filter->column(1/2, function ($filter) {
                 $filter->equal('order_no', '订单号');
                 $filter->like('customer_what_apps', 'whatsapp');
                 $filter->between('created_at', '下单时间')->datetime();
+                $filter->equal('order_status', '订单状态')->select(Order::ORDER_STATUS_MAP);
             });
         });
 
@@ -96,7 +100,12 @@ class OrderController extends AdminController
         $grid->column('order_type', '订单类型')->display(function ($order_type){
             return Order::ORDER_TYPE_MAP[$order_type]??'';
         });
-        $grid->column('order_no', __('订单号'));
+        $grid->column('order_no', __('订单号'))->expand(function ($model) {
+            $products = $model->load(['products.sku'])->products()->get()->map(function ($product) {
+                return [$product->sku->sku, $product->quantity, OrderProduct::TYPE_MAP[$product->type]??'常规商品'];
+            });
+            return new Table(['Sku', '数量', '商品类型'], $products->toArray());
+        });
         $grid->column('products', '商品名称')->display(function ($products) {
             $product = current($products);
             return "<span style='color:blue'> <a href='".Util::to('list/product/' . $product['product_id'])."' target='_blank'> ".
@@ -120,21 +129,33 @@ city : $this->city
 address : $address
 </textarea>";
         });
-        $grid->column('customer_note', __('用户留言'));
+        $grid->column('customer_note', __('用户留言'))->editable();
         $grid->column('sku', '购买sku')->display(function (){
-            $product = current($this->products->toArray());
-            return Sku::find($product['sku_id'])->sku;
+            $display = [];
+            $order_products = $this->products->toArray();
+            $order_product_sku_ids = array_column($order_products, 'sku_id');
+            $sku_maps = array_column(Sku::whereIn('id', $order_product_sku_ids)->get(['id', 'sku'])->toArray(), 'sku', 'id');
+            foreach ($order_products as $order_product){
+                if(!empty($sku_maps[$order_product['sku_id']])){
+                    $display[] = $sku_maps[$order_product['sku_id']] . (($order_product['type']==OrderProduct::TYPE_GIFT)?'(赠)':'');
+                }
+            }
+            return join('<br>', $display);
         });
 
-        $grid->column('sku_inventory' , '库存情况')->style('width:200px')->display(function(){
-            $sku_info = current($this->products->toArray());
-            $sku_id = array_get($sku_info, 'sku_id');
-            $inventories = SkuInventory::with('warehouse')->where('sku_id', $sku_id)->get();
-            $display = [];
-            foreach ($inventories as $inventory){
-                $display[] = $inventory->warehouse->name . ':' . $inventory->inventory;
+        $grid->column('sku_inventory' , '库存情况')->display(function(){
+            $sku_infos = $this->products->toArray();
+            foreach ($sku_infos as $sku_info){
+                $sku_id = array_get($sku_info, 'sku_id');
+                $sku = data_get($sku_info, 'sku.sku', '');
+                $inventories = SkuInventory::with('warehouse')->where('sku_id', $sku_id)->get();
+                $tmp = [];
+                foreach ($inventories as $inventory){
+                    $tmp[] = $inventory->warehouse->name . ':' . $inventory->inventory;
+                }
+                $display[] = $sku . join(',', $tmp);
             }
-            return sprintf('<a target="_blank" href="%s">%s</a>', Util::to('admin/purchases/create?sku_id='.$sku_id), join('<br>', $display));
+            return sprintf('<div style="width:150px"><a target="_blank" href="%s">%s</a></div>', Util::to('admin/purchases/create'), join('<br>', $display));
         });
 
         $grid->column('total', __('购买总价'))->display(function($total){

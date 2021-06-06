@@ -50,6 +50,26 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function getMainPicturesAttribute(){
+        $main_pictures = array_slice($this->pictures, 0, 5);
+        array_walk($main_pictures, function (&$main_picture){
+            $main_picture = '/' . $main_picture;
+        });
+        return $main_pictures;
+    }
+
+    public function getDetailPicturesAttribute(){
+        $detail_pictures = array_slice($this->pictures, 4);
+        array_walk($detail_pictures, function (&$detail_picture){
+            $detail_picture = '/' . $detail_picture;
+        });
+        return $detail_pictures;
+    }
+
+    public function getSkuPicturesAttribute(){
+        return $this->skus->map->image->unique()->values()->toArray();
+    }
+
     public function supplier()
     {
         return $this->hasOne(ProductSupplier::class, 'product_id');
@@ -79,19 +99,36 @@ class Product extends Model
 
     public function getChildrenAttribute(){
         $children = [];
-        foreach ($this->skus as $sku){
-            $child = [];
-            $child['id'] = $sku?$sku->id:0;
-            $child['image'] = $sku?$sku->image:'';
-            $child['sku'] = $sku?$sku->sku:'';
+        foreach ($this->skus->groupBy(['main_option_value']) as $skus){
             $options = [];
-            foreach ($sku->options as $option){
-                $child_option = [
-                    'option_id' => $option->option_id,
-                    'option_name' => $option->option?$option->option->name:'',
-                    'option_value' => $option->option_value
-                ];
-                $options[$option->option_id] = $child_option;
+            $child = [];
+            foreach ($skus as $sku){
+                if(empty($child['main_option'])){
+                    $child['main_option'][] = [
+                        'option_id' => $sku->main_option,
+                        'option_name' => Option::find($sku->main_option)->name??'',
+                        'option_value' => $sku->main_option_value,
+                    ];
+                }
+                $child['image'] = $sku?$sku->image:'';
+                foreach ($sku->options as $option){
+                    if(empty($options[$option->option_id]['option_name'])){
+                        $options[$option->option_id]['option_name'] = $option->option?$option->option->name:'';
+                    }
+                    if(empty($options[$option->option_id]['option_name'])){
+                        $options[$option->option_id]['option_id'] = $option->option_id;
+                    }
+                    if(empty($options[$option->option_id]['option_value'])){
+                        $options[$option->option_id]['option_value'] = [];
+                    }
+                    if(!in_array($option->option_value, $options[$option->option_id]['option_value'])){
+                        $options[$option->option_id]['option_value'][] = $option->option_value;
+                    }
+                }
+            }
+            foreach ($options as $key => $tmp_option){
+                $options[$key]['option_id'] = $key;
+                $options[$key]['option_value'] = join(',', array_get($tmp_option, 'option_value', []) );
             }
             $child['options'] = $options;
             $children[] = $child;
@@ -101,18 +138,41 @@ class Product extends Model
 
     public function getFrontChildrenAttribute(){
         $children = [];
-        foreach ($this->skus as $sku){
-            $child = [];
-            $child['id'] = $sku?$sku->id:0;
-            $child['sku'] = $sku?$sku->sku:'';
-            $child['image'] = $sku?$sku->image:'';
-            $options = [];
-            foreach ($sku->options as $option){
-                $options[] = $option->option_value;
+        $option_names = [];
+        $main_options = [];
+        $options = [];
+        foreach ($this->skus->groupBy(['main_option_value']) as $skus){
+            foreach ($skus as $sku){
+                if(empty($option_names[$sku->main_option])){
+                    $option_names[$sku->main_opion]=Option::find($sku->main_option)->name??'';
+                }
+                $current_main_option_name =$option_names[$sku->main_opion];
+                if(empty($main_options[$current_main_option_name][$sku->main_option_value])){
+                    $main_options[$current_main_option_name][$sku->main_option_value] = [
+                        'value_name' => $sku->main_option_value,
+                        'image' => $sku->image
+                    ];
+                }
+                $child['image'] = $sku?$sku->image:'';
+                foreach ($sku->options as $option){
+                    if(empty($options[$sku->main_option_value][$option->option_id]['option_name'])){
+                        $options[$sku->main_option_value][$option->option_id]['option_name'] = $option->option?$option->option->name:'';
+                    }
+                    if(empty($options[$sku->main_option_value][$option->option_id]['option_id'])){
+                        $options[$sku->main_option_value][$option->option_id]['option_id'] = $option->option_id;
+                    }
+                    if(empty($options[$sku->main_option_value][$option->option_id]['option_value'])){
+                        $options[$sku->main_option_value][$option->option_id]['option_value'] = [];
+                    }
+                    if(!in_array($option->option_value, $options[$sku->main_option_value][$option->option_id]['option_value'])){
+                        $options[$sku->main_option_value][$option->option_id]['option_value'][] = $option->option_value;
+                    }
+                }
             }
-            $child['options'] = join(',', $options);
-            $children[] = $child;
         }
+        $children['main_option'] = $main_options;
+        $children['options'] = $options;
+
         return $children;
     }
 
@@ -137,7 +197,7 @@ class Product extends Model
     protected function modify(Product $product, $data) : int
     {
         $id = 0;
-        $this->valid($data);
+        $this->valid($data, $product);
         DB::transaction(function () use ($product, $data, &$id) {
             $product->title = $data['title'];
             if(!array_get($data, 'product_no', '')){
@@ -157,11 +217,11 @@ class Product extends Model
             $product->video_link = $data['video_link']??'';
 
 //            $product->options = $data['options'];
+            $product->main_option = $data['main_option'];
             $product->cost = $data['cost'];
             $product->pictures = $data['pictures'];
             $product->weight = $data['weight'];
-            $product->save();
-            $product->product_no = $product->genProductNo();
+            $product->product_no = $data['product_no'];
             $product->save();
 
             if(array_get($data, 'supplier_link', '') || array_get($data, 'supplier_note', '')){
@@ -172,12 +232,10 @@ class Product extends Model
                 ]);
             }
 
-            if(array_get($data, 'options', [])){
-                $product->options()->sync($data['options']);
-            }
+            $product->options()->sync(array_get($data, 'options', []));
 
             if(array_get($data, 'skus', [])){
-                Sku::modify($product->id,$data['skus']);
+                Sku::modify($product,$data['skus']);
             }
 
             $id = $product->id;
@@ -185,21 +243,41 @@ class Product extends Model
         return $id;
     }
 
-    public function valid($data){
+    public function valid($data, $product){
         $skus = array_get($data, 'skus', []);
+        if(!array_get($data, 'main_option', 0)){
+            throw new \Exception('主属性必选');
+        }
+        $main_options=[];
         foreach ($skus as $i => $sku){
             foreach ($sku as $key => $value){
                 if(empty($value) && $key != 'options' ){
-                    throw new \Exception(sprintf('第 %d 行，%s 值不能为空', $key+1, $key));
+                    throw new \Exception(sprintf('第 %d 行，%s 值不能为空', $i+1, $key));
                 }
+            }
+            foreach (array_get($sku, 'main_option', []) as $option){
+                if(is_array($option) && empty($option['option_value'])){
+                    throw new \Exception(sprintf('第 %d 行，%s(主属性)值不能为空', $i+1, $option['option_name']));
+                }
+                if(in_array($option['option_value'], $main_options)){
+                    throw new \Exception(sprintf('主属性 %s 值重复', $option['option_value']));
+                }
+                $main_options[] = $option['option_value'];
             }
             foreach (array_get($sku, 'options', []) as $option){
                 if(is_array($option) && empty($option['option_value'])){
                     throw new \Exception(sprintf('第 %d 行，%s 值不能为空', $i+1, $option['option_name']));
                 }
             }
-
         }
+        $query = self::newQuery();
+        if($product->id){
+            $query->where('id', '!=', $product->id);
+        }
+        if($query->where('product_no', array_get($data, 'product_no', ''))->count()){
+            throw new \Exception('该货号已存在，请重新输入');
+        }
+
     }
 
     public function genProductNo(){
@@ -208,4 +286,5 @@ class Product extends Model
         }
         return uniqid('pn_');
     }
+
 }

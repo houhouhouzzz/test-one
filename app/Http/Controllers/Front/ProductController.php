@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use App\Extensions\Util;
 use App\Http\Controllers\Controller;
+use App\Model\Gift;
 use App\Model\Product;
 use App\Model\TermService;
 
@@ -18,16 +19,21 @@ class ProductController extends Controller
         if(!$country || empty(Product::PRICE_COLUMNS[$country])){
             $country = Util::getCountry();
         }
+        $product->load(['skus.options']);
         $price_info = Product::PRICE_COLUMNS[$country];
         $product->price = $product->{$price_info['price_column']};
         $pictures = $product->pictures??[];
-        $product->top_picture = array_get($pictures, 0, '');
-        unset( $pictures['0']);
         $product->pictures = $pictures;
         $term_services = TermService::getCacheValidAll();
+        $gift = Gift::where('main_product_id', $product->id)->whereStatus(Gift::STATUS_OPEN)
+            ->first();
+        $gift_product = $gift?$gift->gift_product:null;
+        if($gift_product){
+            $gift_product->gift_title = $gift->title;
+        }
         return view('front.product.index',
-            compact('product', 'price_info', 'country', 'term_services'));
-
+            compact('product', 'price_info', 'country',
+                'term_services', 'gift_product'));
     }
 
     public function product_list($id){

@@ -29,6 +29,9 @@ Route::group([
     $router->resource('owing', OwingController::class);
     $router->resource('sku-returns', SkuReturnController::class);
     $router->resource('term-services', TermServiceController::class);
+    $router->resource('gifts', GiftController::class);
+    $router->post('/gifts/edit/{id}', 'GiftController@update');
+
 
 
     $router->post('orders/once-default-shipping', 'OrderController@OnceDefaultShipping');
@@ -36,6 +39,7 @@ Route::group([
 
     $router->get('export/template/{name}', 'ExportController@template');
 
+    $router->get('api/product', 'ProductController@product');
     $router->get('api/category', 'CategoryController@category');
     $router->get('api/sku', 'SkuController@sku');
     $router->post('api/upload', 'FileController@upload');
