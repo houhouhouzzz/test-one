@@ -74,7 +74,7 @@ class OnceDefaultShippingExport implements FromCollection, WithHeadings, WithMap
             $product_weight[] = $product->product->weight;
             $ocean_code[] = $product->product->ocean_number;
             $product_quantity[] = $product->quantity;
-            $product_cost[] = $product->product->cost / 2 * 6.5;
+            $product_cost[] = round( $product->product->cost / (2 * 6.5), 2);
             $product_sku[] = $product->sku->sku;
         });
         return [$product_desc, $product_weight, $product_quantity, $product_cost, $product_sku, $ocean_code];

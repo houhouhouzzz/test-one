@@ -17,6 +17,8 @@ use App\Model\OrderProduct;
 use App\Model\ShippingMethod;
 use App\Model\Sku;
 use App\Model\SkuInventory;
+use App\Model\Warehouse;
+use Carbon\Carbon;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
@@ -116,9 +118,7 @@ class OrderController extends AdminController
         $grid->column('customer_phone', __('用户电话'))->display(function($customer_phone){
             return $customer_phone . '<br><a class="btn btn-info btn-sm" target="_blank" href="https://web.whatsapp.com/send?phone='.$customer_phone.'">调用whatsApp</a>';
         });
-        $grid->column('customer_what_apps', __('whatsapp'))->display(function($customer_what_apps){
-            return "<a target='_blank' href='https://web.whatsapp.com/send?phone=$customer_what_apps'>$customer_what_apps</a>";
-        });
+        $grid->column('customer_what_apps', __('whatsapp'))->editable();
 
         $grid->column('address', '用户地址')->display(function ($address) {
             return "<textarea id='' cols='30' rows='6' disabled>
@@ -283,10 +283,28 @@ JS
     {
         $post = request()->all();
         if (!empty($post['value']) && !empty($post['name'])) {
-            $product = Order::findOrFail($id);
-            $product->{$post['name']} = $post['value'];
-            $product->save();
-            return ['display' => [], 'message' => "更新成功 !", 'status' => true];
+            $order = Order::findOrFail($id);
+            if($post['name'] == 'order_status'
+                && ! in_array( $order->status, [Order::ORDER_STATUS_SHIPPING, Order::ORDER_STATUS_CHANGE_SHIPPING])
+                && in_array($post['value'], [Order::ORDER_STATUS_SHIPPING, Order::ORDER_STATUS_CHANGE_SHIPPING])
+                && empty($order->shipping_at)
+            ){
+                $order->shipping_at = Carbon::now();
+                $warehouse_id = Warehouse::DEFAULT_WAREHOUSE_ID;
+                if($post['value'] == Order::ORDER_STATUS_SHIPPING){
+                    $order->shipping_status = ShippingMethod::DEFAULT_STATUS;
+                }
+                if($post['value'] == Order::ORDER_STATUS_CHANGE_SHIPPING){
+                    $order->shipping_status = ShippingMethod::EXCHANGE_STATUS;
+                    $warehouse_id = Warehouse::DEFAULT_EXCHANGE_ID;
+                }
+                foreach ($order->products as $product){
+                    SkuInventory::incrementInventory($product->sku_id, - $product->quantity, $warehouse_id);
+                }
+            }
+            $order->{$post['name']} = $post['value'];
+            $order->save();
+            return ['display' => [], 'message' => "更新成功 !", 'status' => true, 'refresh'=>true];
         }
     }
 
