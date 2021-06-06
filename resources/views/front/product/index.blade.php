@@ -149,13 +149,13 @@
 
         <div class="imgContainer visible-img-detail" data-gtm-vis-first-on-screen-13511651_20="2044" data-gtm-vis-total-visible-time-13511651_20="100" data-gtm-vis-has-fired-13511651_20="1">
             <?php $i = 5; ?>
-                @if($i == $product->video_position && $product->video_link)
-                    <div class="video" style="font-family: Helvetica;">
-                        <video src="{{$product->video_link}}" controls="controls">
-                            {{--                                                       poster="{{$product->pictures?\App\Extensions\Util::to($product->pictures[0]) : ''}}"--}}
-                        </video>
-                    </div>
-                @endif
+{{--                @if($i == $product->video_position && $product->video_link)--}}
+{{--                    <div class="video" style="font-family: Helvetica;">--}}
+{{--                        <video src="{{$product->video_link}}" controls="controls">--}}
+{{--                            --}}{{--                                                       poster="{{$product->pictures?\App\Extensions\Util::to($product->pictures[0]) : ''}}"--}}
+{{--                        </video>--}}
+{{--                    </div>--}}
+{{--                @endif--}}
             @foreach($product->detail_pictures as $k => $picture)
             <div>
                 <img src="{{\App\Extensions\Util::to($picture)}}" alt="" />
@@ -164,13 +164,13 @@
             </div>
 
                 <?php $i++ ?>
-                    @if($i == $product->video_position && $product->video_link)
-                        <div class="video" style="font-family: Helvetica;">
-                            <video src="{{$product->video_link}}" controls="controls">
-                                {{--                                                       poster="{{$product->pictures?\App\Extensions\Util::to($product->pictures[0]) : ''}}"--}}
-                            </video>
-                        </div>
-                    @endif
+{{--                    @if($i == $product->video_position && $product->video_link)--}}
+{{--                        <div class="video" style="font-family: Helvetica;">--}}
+{{--                            <video src="{{$product->video_link}}" controls="controls">--}}
+{{--                                --}}{{--                                                       poster="{{$product->pictures?\App\Extensions\Util::to($product->pictures[0]) : ''}}"--}}
+{{--                            </video>--}}
+{{--                        </div>--}}
+{{--                    @endif--}}
             @endforeach
             @foreach($product->sku_pictures as $child)
                 <div>
@@ -178,13 +178,13 @@
                     <div class="imgText" style="display: none;"></div>
                     <div class="imgText" style="display: none;"></div>
                 </div>
-                @if($i == $product->video_position && $product->video_link)
-                    <div class="video" style="font-family: Helvetica;">
-                        <video src="{{$product->video_link}}" controls="controls">
-                                {{--                   poster="{{$product->pictures?\App\Extensions\Util::to($product->pictures[0]) : ''}}"--}}
-                        </video>
-                    </div>
-                @endif
+{{--                @if($i == $product->video_position && $product->video_link)--}}
+{{--                    <div class="video" style="font-family: Helvetica;">--}}
+{{--                        <video src="{{$product->video_link}}" controls="controls">--}}
+{{--                                --}}{{--                   poster="{{$product->pictures?\App\Extensions\Util::to($product->pictures[0]) : ''}}"--}}
+{{--                        </video>--}}
+{{--                    </div>--}}
+{{--                @endif--}}
                 <?php $i++ ?>
             @endforeach
                 @if($gift_product)
@@ -196,14 +196,14 @@
                         </div>
                     @endforeach
                 @endif
-            @if($i<=$product->video_position && $product->video_link)
-                <div class="video" style="font-family: Helvetica;">
-                    <video src="{{$product->video_link}}" controls="controls"
-                            {{--                   poster="{{$product->pictures?\App\Extensions\Util::to($product->pictures[0]) : ''}}"--}}
-                    >
-                    </video>
-                </div>
-            @endif
+{{--            @if($i<=$product->video_position && $product->video_link)--}}
+{{--                <div class="video" style="font-family: Helvetica;">--}}
+{{--                    <video src="{{$product->video_link}}" controls="controls"--}}
+{{--                            --}}{{--                   poster="{{$product->pictures?\App\Extensions\Util::to($product->pictures[0]) : ''}}"--}}
+{{--                    >--}}
+{{--                    </video>--}}
+{{--                </div>--}}
+{{--            @endif--}}
         </div>
         <div class="cover-bg" style="display: none;"></div>
 {{--        <div class="service-pachic">--}}
