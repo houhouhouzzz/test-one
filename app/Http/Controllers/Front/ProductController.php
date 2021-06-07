@@ -13,8 +13,7 @@ class ProductController extends Controller
     public function index($id, $country=''){
         $product = Product::find($id);
         if(!$product){
-            return view('front.product.index',
-                compact('product'));
+            abort(404);
         }
         if(!$country || empty(Product::PRICE_COLUMNS[$country])){
             $country = Util::getCountry();
