@@ -4,7 +4,9 @@ namespace App\Console\Commands;
 
 use App\Extensions\HttpUtil;
 use App\Extensions\Util;
+use App\Model\Image;
 use App\Model\Order;
+use App\Model\Product;
 use App\Model\Sku;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
@@ -43,6 +45,30 @@ class test extends Command
      */
     public function handle()
     {
+
+        $skus = Sku::all();
+        foreach ($skus as $sku){
+            $sku->image = strtr($sku->image, ['static/uploads/' => '']);
+            $sku->save();
+        }
+
+        $images = Image::all();
+        foreach ($images as $image){
+            $image->path = strtr($image->path, ['static/uploads/' => '']);
+            $image->save();
+        }
+
+        $products = Product::all();
+        foreach ($products as $product){
+            $pics = [];
+            foreach( $product->pictures as $picture ){
+                $pics[] = strtr($picture, ['static/uploads/' => '']);
+            }
+            $product->pictures = $pics;
+            $product->save();
+        }
+        dd(1);
+
         $order = Order::find(10018);
 
         $product_desc = $product_weight = $ocean_code = $product_quantity = $product_cost = $product_sku =[];

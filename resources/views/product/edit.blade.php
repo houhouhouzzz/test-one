@@ -279,10 +279,12 @@
                                                         <div class="box-overlay">
                                                         <span>
                                                             <a href="javascript:void(0);" @click="removeImage(pic_index)" v-bind:index="pic_index">移除</a>
+                                                            <a href="javascript:void(0);" @click="upImage(pic_index)" v-bind:index="pic_index">上移</a>
+                                                            <a href="javascript:void(0);" @click="downImage(pic_index)" v-bind:index="pic_index">下移</a>
                                                         </span>
                                                         </div>
                                                         <input type="hidden" :name="'pictures['+pic_child+']'" :value="pic_child">
-                                                        <img width="100" :src="'/'+pic_child" onerror="this.style.display='none'">
+                                                        <img width="100" :src="'/static/uploads/'+pic_child" onerror="this.style.display='none'">
                                                     </li>
                                                 </ul>
                                             </div>
@@ -317,7 +319,7 @@
                                                         <input type="file" accept="image/*" :index="index" name="file" @change="pictureUpload">
                                                     </li>
                                                 </ul>
-                                                <img width="100" :src="child.image" v-if="child.image">
+                                                <img width="100" :src="'/static/uploads/'+child.image" v-if="child.image">
                                             </td>
                                             <td v-for="(main_option_child, main_option_index) in child.main_option" v-if="main_option_child">
                                                 <input class="form-control" @input="changeIn()" type="text" v-model="main_option_child.option_value" >
@@ -440,6 +442,24 @@
                     removeImage : function(index){
                         vm.pictures.splice(index,1);
                     },
+                    upImage : function(index){
+                        if(index <= 0){
+                            return false;
+                        }
+                        let tmp_pic = vm.pictures[index-1];
+                        vm.pictures[index-1] = vm.pictures[index];
+                        vm.pictures[index] = tmp_pic;
+                        this.$forceUpdate()
+                    },
+                    downImage : function(index){
+                        if(index + 1 >= vm.pictures.length){
+                            return false;
+                        }
+                        let tmp_pic = vm.pictures[index+1];
+                        vm.pictures[index+1] = vm.pictures[index];
+                        vm.pictures[index] = tmp_pic;
+                        this.$forceUpdate()
+                    },
                     delSku : function(index){
                         vm.skus.splice(index, 1);
                     },
@@ -460,7 +480,7 @@
                         })
                             .then(function (response) {
                                 let index = $(e.target).attr('index');
-                                vm.skus[index]['image'] = '/' + response.data.path;
+                                vm.skus[index]['image'] = response.data.path;
                             })
                             .catch(function (error) {
                                 let error_message = '';
@@ -670,8 +690,8 @@
             ,imageCrop : true
             ,formData : {}
             ,done: function (e,data) {
-                if(vm.pictures.length > 15){
-                    swal('图片最多上传15张', '', 'error', {
+                if(vm.pictures.length > 40){
+                    swal('图片最多上传40张', '', 'error', {
                         dangerMode: true,
                         confirmButton: true,
                     });
@@ -695,7 +715,7 @@
             ,imageCrop : true
             ,formData : {}
             ,done: function (e,data) {
-                let thumb = window.location.origin + '/' + data.result.path;
+                let thumb = window.location.origin + '/static/uploads/' + data.result.path;
                 let url = data.result.path;
                 $('#referencesUl').append($('#reference-gallery-template').html().replaceMulti({
                     '{thumb}': thumb,

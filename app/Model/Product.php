@@ -53,7 +53,7 @@ class Product extends Model
     public function getMainPicturesAttribute(){
         $main_pictures = array_slice($this->pictures, 0, 5);
         array_walk($main_pictures, function (&$main_picture){
-            $main_picture = '/' . $main_picture;
+            $main_picture = '/static/uploads/' . $main_picture;
         });
         return $main_pictures;
     }
@@ -61,7 +61,7 @@ class Product extends Model
     public function getDetailPicturesAttribute(){
         $detail_pictures = array_slice($this->pictures, 5);
         array_walk($detail_pictures, function (&$detail_picture){
-            $detail_picture = '/' . $detail_picture;
+            $detail_picture = '/static/uploads/' . $detail_picture;
         });
         return $detail_pictures;
     }

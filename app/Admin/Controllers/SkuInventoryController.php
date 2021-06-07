@@ -55,7 +55,7 @@ class SkuInventoryController extends AdminController
         $grid->column('sku.sku', __('sku'));
         $grid->column('sku.image', 'sku图片')->display(function($image){
             if(!empty($image)){
-                return Util::to($image);
+                return Util::to('/static/uploads/' . $image);
             }
             return '';
         })->image();

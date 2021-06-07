@@ -174,7 +174,7 @@
             @endforeach
             @foreach($product->sku_pictures as $child)
                 <div>
-                    <img src="{{\App\Extensions\Util::to($child)}}" alt="" />
+                    <img src="{{\App\Extensions\Util::to('/static/uploads/' . $child)}}" alt="" />
                     <div class="imgText" style="display: none;"></div>
                     <div class="imgText" style="display: none;"></div>
                 </div>
@@ -508,12 +508,12 @@
                 },
                 getSkuImage : function(){
                     for (let key in this.skus.main_option) {
-                        return this.skus.main_option[key][this.main_option_value]['image'];
+                        return '/static/uploads/' + this.skus.main_option[key][this.main_option_value]['image'];
                     }
                 },
                 getGiftSkuImage : function(){
                     for (let key in this.gift_skus.main_option) {
-                        return this.gift_skus.main_option[key][this.gift_main_option_value]['image'];
+                        return '/static/uploads/' + this.gift_skus.main_option[key][this.gift_main_option_value]['image'];
                     }
                 },
                 getGiftOptions : function(){

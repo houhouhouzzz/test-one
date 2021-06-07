@@ -39,14 +39,11 @@ class FileController extends AdminController
         if( ! $data ){
             $path = $file->storeAS('', $uniq_name, "admin");
             $data = Image::create([
-                'path' => 'static/uploads/' . $path,
+                'path' => $uniq_name,
                 'md5' => $md5,
                 'sha1' => $sha1
             ]);
         }
-
-
-
 
         return ['path' => $data->path];
 

@@ -23,7 +23,7 @@
                     <div class="product-grid">
                         <div class="product-image">
 {{--                            <a href="{{\App\Extensions\Util::to('/product/' . $product['id'] . '/' . $product['country'])}}" class="image">--}}
-                                <img class="pic-1" src="{{\App\Extensions\Util::to($sku_return['sku']['image'])}}">
+                                <img class="pic-1" src="{{\App\Extensions\Util::to('/static/uploads/'.$sku_return['sku']['image'])}}">
 {{--                            </a>--}}
                         </div>
                         <div class="product-content">

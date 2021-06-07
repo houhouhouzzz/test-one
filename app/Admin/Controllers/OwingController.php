@@ -65,7 +65,7 @@ class OwingController extends AdminController
         $grid->column('sku', __('Sku'));
         $grid->column('image', '图片')->display(function($image_url){
             if(!empty($image_url)){
-                return Util::to( $image_url);
+                return Util::to('/static/uploads/' . $image_url);
             }
             return '';
         })->image();

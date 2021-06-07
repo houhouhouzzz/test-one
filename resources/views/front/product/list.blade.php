@@ -23,7 +23,7 @@
                     <div class="product-grid">
                         <div class="product-image">
                             <a href="{{\App\Extensions\Util::to('/product/' . $product['id'] . '/' . $product['country'])}}" class="image">
-                                <img class="pic-1" src="{{$product['pictures']?\App\Extensions\Util::to($product['pictures'][0]) : ''}}">
+                                <img class="pic-1" src="{{$product['pictures']?\App\Extensions\Util::to('/static/uploads/'.$product['pictures'][0]) : ''}}">
                             </a>
                             <span class="product-new-label">new</span>
                         </div>

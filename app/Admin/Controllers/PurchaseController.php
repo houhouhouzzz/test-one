@@ -56,12 +56,12 @@ class PurchaseController extends AdminController
         });
         $grid->column('quantity', __('数量'));
         $grid->column('total', __('采购价格'));
-        $grid->column('image_url', '图片')->display(function($image_url){
-            if(!empty($image_url)){
-                return Util::to( $image_url);
-            }
-            return '';
-        })->image();
+//        $grid->column('image_url', '图片')->display(function($image_url){
+//            if(!empty($image_url)){
+//                return Util::to( $image_url);
+//            }
+//            return '';
+//        })->image();
         $grid->column('third_purchase_number', __('第三方采购单号'));
         $grid->column('tracking_company', __('物流公司'));
         $grid->column('tracking_number', __('物流单号'))->display(function ($tracking_number){
