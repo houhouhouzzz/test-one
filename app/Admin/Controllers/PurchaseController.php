@@ -33,6 +33,25 @@ class PurchaseController extends AdminController
 
         $grid->disableExport();
 
+        $grid->expandFilter();
+
+        $grid->filter(function($filter){
+            // 去掉默认的id过滤器
+            $filter->disableIdFilter();
+
+            $filter->column(1/3, function ($filter) {
+                $filter->equal('id', 'Id');
+            });
+
+            $filter->column(1/3, function ($filter) {
+                $filter->equal('status', '分类')->select(Purchase::STATUS_MAP);
+            });
+
+            $filter->column(1/3, function ($filter) {
+                $filter->like('sku.sku', 'Sku');
+            });
+        });
+
         $grid->actions(function($tool){
             $tool->disableView();
         });

@@ -14,4 +14,8 @@ class Purchase extends Model
         self::STATUS_PROCESSING => '采购中',
         self::STATUS_ARRIVE => '已入库',
     ];
+
+    public function sku(){
+        return $this->belongsTo(Sku::class);
+    }
 }
