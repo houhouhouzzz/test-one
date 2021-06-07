@@ -44,7 +44,7 @@ class PurchaseController extends AdminController
             });
 
             $filter->column(1/3, function ($filter) {
-                $filter->equal('status', '分类')->select(Purchase::STATUS_MAP);
+                $filter->equal('status', '状态')->select(Purchase::STATUS_MAP);
             });
 
             $filter->column(1/3, function ($filter) {
