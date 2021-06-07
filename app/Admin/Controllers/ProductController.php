@@ -82,7 +82,7 @@ class ProductController extends AdminController
         $grid->column('id', __('产品编号'))->sortable();
         $grid->column('pictures', '图片')->display(function($pictures){
             if(!empty($pictures)){
-                return Util::to($pictures[0]);
+                return Util::to( 'static/uploads/' . $pictures[0]);
             }
             return '';
         })->image();
