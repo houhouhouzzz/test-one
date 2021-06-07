@@ -187,15 +187,6 @@
 {{--                @endif--}}
                 <?php $i++ ?>
             @endforeach
-                @if($gift_product)
-                    @foreach($gift_product->pictures as $picture)
-                        <div>
-                            <img src="{{\App\Extensions\Util::to($picture)}}" alt="" />
-                            <div class="imgText" style="display: none;"></div>
-                            <div class="imgText" style="display: none;"></div>
-                        </div>
-                    @endforeach
-                @endif
 {{--            @if($i<=$product->video_position && $product->video_link)--}}
 {{--                <div class="video" style="font-family: Helvetica;">--}}
 {{--                    <video src="{{$product->video_link}}" controls="controls"--}}
