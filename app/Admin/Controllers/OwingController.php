@@ -37,7 +37,7 @@ class OwingController extends AdminController
 
         $grid->model()->where('status', Sku::STATUS_ONLINE)->whereIn('id',
             Order::join('order_products', 'order_products.order_id', '=', 'orders.id')
-                ->where('orders.order_status', Order::ORDER_STATUS_UNCONFIRM)
+                ->where('orders.order_status', Order::ORDER_STATUS_CONFIRM)
                 ->distinct('sku_id')->pluck('sku_id')
         );
 
