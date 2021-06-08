@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Actions\Post;
+namespace App\Admin\Actions\Post\Purchase;
 
 use App\Model\Purchase;
 use App\Model\SkuInventory;
@@ -24,7 +24,7 @@ class BatchReceive extends BatchAction
             }
         }
 
-        return $this->response()->success('Success message...')->refresh();
+        return $this->response()->success('入库成功')->refresh();
     }
 
 }

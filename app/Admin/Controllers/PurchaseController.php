@@ -2,7 +2,8 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Actions\Post\BatchReceive;
+use App\Admin\Actions\Post\Purchase\BatchReceive;
+use App\Admin\Actions\Post\Purchase\BatchRemove;
 use App\Extensions\Util;
 use App\Model\Sku;
 use Encore\Admin\Controllers\AdminController;
@@ -57,6 +58,8 @@ class PurchaseController extends AdminController
         });
 
         $grid->batchActions(function ($batch) {
+            $batch->disableDelete();
+            $batch->add(new BatchRemove());
             $batch->add(new BatchReceive());
         });
 
