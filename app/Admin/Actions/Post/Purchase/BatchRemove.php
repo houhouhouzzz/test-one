@@ -20,7 +20,6 @@ class BatchRemove extends BatchAction
                     return $this->response()->error( 'Id为' . $model->id . '的采购单 已入库 不能删除');
                 }
                 $purchase_ids[] = $model->id;
-                dd(1);
             }
         }
         Purchase::whereIn('id', $purchase_ids)->update(['status'=>Purchase::STATUS_DELETE]);

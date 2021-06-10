@@ -55,6 +55,7 @@ class PurchaseController extends AdminController
 
         $grid->actions(function($tool){
             $tool->disableView();
+            $tool->disableDelete();
         });
 
         $grid->batchActions(function ($batch) {
