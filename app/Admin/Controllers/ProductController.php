@@ -335,12 +335,12 @@ class ProductController extends AdminController
             ]
         );
 
-//        try{
+        try{
             $post = request()->all();
             $product_id = Product::modify(new Product(),$post);
-//        }catch (\Exception $e){
-//            return response()->json(['message' => $e->getMessage()], 406);
-//        }
+        }catch (\Exception $e){
+            return response()->json(['message' => $e->getMessage()], 406);
+        }
 
         return response()->json(Product::find($product_id), 200);
     }
