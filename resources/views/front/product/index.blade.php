@@ -280,7 +280,7 @@
                         Product details &nbsp;&nbsp; (Please select)
                     </div>
                     <div class="option-btn-area" style="">
-                        <div style="width:100%;min-height:0.7rem;max-height: 2.8rem" v-for="(main_button, main_select_title) in skus.main_option">
+                        <div style="width:100%;min-height:0.7rem;max-height: 2.8rem" class="clearfix" v-for="(main_button, main_select_title) in skus.main_option">
                             <div v-text="main_select_title" style="float: left; margin-right: 0.3rem; position: relative;color: #9fa0a0;font-size: .21rem;padding: .05rem .2rem;width: 1rem;"></div>
                             <div class="option-btn" v-for="(value, index) in main_button"  v-bind:class="{optionActive : main_option_value == index}" @click="changeMainOption(index)" v-text="index" style="float: left; margin-right: 0.3rem; position: relative;">
                             </div>

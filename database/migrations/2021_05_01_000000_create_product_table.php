@@ -52,7 +52,7 @@ class CreateProductTable extends Migration
         Schema::create('product_suppliers', function (Blueprint $table) {
             $table->integerIncrements('id');
             $table->integer('product_id')->default(0)->comment('商品id');
-            $table->string('link')->nullable()->default('')->comment('供应商链接');
+            $table->string('link', '1024')->nullable()->default('')->comment('供应商链接');
             $table->string('note')->nullable()->default('')->comment('采购备注');
             $table->timestamps();
         });
