@@ -81,7 +81,7 @@ class Sku extends Model
                 $option_item = array_filter(explode(',', $option_item));
             });
             $option_explodes = $this->dikaer($option_map);
-            if(is_array($option_explodes)){
+            if(is_array($option_explodes) && count($option_map) > 1){
                 foreach ($option_explodes as $option_explode){
                     $i = 0;
                     $tmp_options = $options;
@@ -93,7 +93,19 @@ class Sku extends Model
                     $return_datum['options'] = $tmp_options;
                     $return_data[] = $return_datum;
                 }
-            }else{
+            }elseif(is_array($option_explodes) && count($option_map) == 1){
+                foreach ($option_explodes as $option_explode){
+                    $i = 0;
+                    $tmp_options = $options;
+                    foreach ($tmp_options as $key => $tmp_option){
+                        $tmp_options[$key]['option_value'] = $option_explode;
+                        $i++;
+                    }
+                    $return_datum = $datum;;
+                    $return_datum['options'] = $tmp_options;
+                    $return_data[] = $return_datum;
+                }
+            } else{
                 $return_data[] = array_merge(
                     $datum,
                     ['options' => []]
