@@ -97,7 +97,7 @@ class ProductController extends AdminController
             ->editable('select', Product::in_list_maps());
 
         $grid->column('supplier.link', '采购链接')->display(function ($link){
-            return sprintf('<a target="_blank" href="%s">%s</a>', $link, $link);
+            return sprintf('<a target="_blank" href="%s">%s</a>', $link, str_limit($link, 10, '...'));
         });
 
 
