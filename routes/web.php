@@ -23,4 +23,7 @@ Route::post('/order', 'OrderController@store');
 
 Route::get('/{service_name}', 'TermServiceController@index');
 
+Route::post('/eaon/info', 'EaonController@index');
+
+
 
