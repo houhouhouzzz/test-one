@@ -61,6 +61,7 @@ class ProductController extends AdminController
             $filter->disableIdFilter();
 
             $filter->column(1/3, function ($filter) {
+                $filter->like('product_no', '货号');
                 $filter->equal('category_id', '分类')->select('api/category');
             });
 
