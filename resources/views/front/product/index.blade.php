@@ -244,13 +244,6 @@
 {{--                </div>--}}
 {{--            </div>--}}
 {{--        </div>--}}
-        <div class="TermsContainer">
-            @foreach($term_services as $term_service)
-            <div>
-                <a href="/{{$term_service['name']}}">{{$term_service['name']}}</a>
-            </div>
-            @endforeach
-        </div>
         <div class="cover-content" style="display: block;">
             <div id="option">
                 <div style="position:fixed;right:10px;float:right;bottom:3rem;z-index: 16000160">
@@ -422,6 +415,13 @@
                             <img src="{{\App\Extensions\Util::to('/static/image/noteicon.png')}}" alt="" class="phoneicon" />
                             <input placeholder="Write a note if you have" v-model="address_note" class="note inputnew" />
                         </div>
+                    </div>
+                    <div class="TermsContainer">
+                        @foreach($term_services as $term_service)
+                            <div>
+                                <a href="/{{$term_service['name']}}">{{$term_service['name']}}</a>
+                            </div>
+                        @endforeach
                     </div>
 {{--                    <div style="height: 1.5rem;"></div>--}}
                     <div class="address-footer" style="">

@@ -1640,7 +1640,7 @@ select {
 }
 
 .TermsContainer div {
-    border: 1px solid silver;
+    /*border: 1px solid silver;*/
     text-align: center;
     width: 100%;
     cursor: pointer
