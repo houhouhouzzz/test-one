@@ -14,6 +14,9 @@
 //    return view('welcome');
 //});
 
+
+
+Route::get('/', 'IndexController@index');
 Route::get('/category/{id}', 'CategoryController@index');
 Route::get('/product/{id}/{country?}', 'ProductController@index');
 Route::get('/list/product/{id}', 'ProductController@product_list');
