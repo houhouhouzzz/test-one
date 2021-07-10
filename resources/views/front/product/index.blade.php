@@ -93,6 +93,14 @@
         .select2-selection__arrow{
             display: none;
         }
+        .teldiv .tellabel .select2-selection__arrow{
+            display: block;
+            height: 26px;
+            position: absolute;
+            top: 8%;
+            right: 43%;
+            width: 20px;
+        }
     </style>
     <script>
         //控制响应式
