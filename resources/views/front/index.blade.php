@@ -51,14 +51,14 @@
         <div style="height: 0.98rem;">
         </div>
         <div style="position: fixed; right: 10px; float: right; bottom: 3rem; z-index: 16000160;">
-            <a href="https://api.whatsapp.com/send?phone={{\App\Model\WhatApp::getCurrentWhatApp()}};text=hi%2CI+want+to+ask+something+about+stayshab&amp;source=&amp;data=">
+            <a href="https://api.whatsapp.com/send?phone={{\App\Model\WhatApp::getCurrentWhatApp()}}&text=hi%2CI+want+to+ask+something+about+stayshab&amp;source=&amp;data=">
                 <img src="/static/image/whatsapp.gif" style="width: 55px; height: 55px;">
             </a>
         </div>
         <div class="productName">
             <div class="productName-big">
                 Welcome, Pls contact us by
-                <a class="display:inline-black" href="https://api.whatsapp.com/send?phone={{\App\Model\WhatApp::getCurrentWhatApp()}};text=hi%2CI+want+to+ask+something+about+stayshab&amp;source=&amp;data=">
+                <a class="display:inline-black" href="https://api.whatsapp.com/send?phone={{\App\Model\WhatApp::getCurrentWhatApp()}}&text=hi%2CI+want+to+ask+something+about+stayshab&amp;source=&amp;data=">
                     whatsapp
                 </a>
                 <br>
