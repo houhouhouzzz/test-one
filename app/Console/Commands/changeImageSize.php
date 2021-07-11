@@ -64,9 +64,9 @@ class changeImageSize extends Command
                     );
                     $resize_upload_file = app( ResizeService::class)->resize($origin_upload_file);
                     $path = $resize_upload_file->storeAS('', $image->path, "admin");
-                    dd($image->path);
                 }
             }
         }
+        $this->info('finish');
     }
 }
