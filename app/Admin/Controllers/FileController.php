@@ -2,12 +2,9 @@
 
 namespace App\Admin\Controllers;
 
-use App\Model\Category;
 use App\Model\Image;
+use App\Services\Admin\ResizeService;
 use Encore\Admin\Controllers\AdminController;
-use Encore\Admin\Form;
-use Encore\Admin\Grid;
-use Encore\Admin\Show;
 
 class FileController extends AdminController
 {
@@ -35,8 +32,12 @@ class FileController extends AdminController
         $md5  = md5_file($file->getPathName());
         $sha1 = sha1_file($file->getPathName());
 
-        $data = Image::where('md5', $md5)->where('sha1', $sha1)->first();
+        $data = null;
         if( ! $data ){
+            // 重置尺寸
+            if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'webp'])) {
+                $file = app(ResizeService::class)->resize($file);
+            }
             $path = $file->storeAS('', $uniq_name, "admin");
             $data = Image::create([
                 'path' => $uniq_name,

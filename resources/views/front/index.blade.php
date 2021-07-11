@@ -14,6 +14,15 @@
     <link rel="shortcut icon" href="{{\App\Extensions\Util::to('/static/image/min_logo.jpeg')}}" type="image/x-icon">
     <link rel="stylesheet" href="{{\App\Extensions\Util::to('/static/css/bootstrap.min.css')}}" />
     <link rel="stylesheet" href="{{\App\Extensions\Util::to('/static/css/productindex.css')}}" />
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C59FXDPNF3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-C59FXDPNF3');
+    </script>
     <script>
         //控制响应式
         var fun = function(doc, win) {

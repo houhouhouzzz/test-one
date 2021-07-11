@@ -14,6 +14,15 @@
                 vertical-align: top;
                 display: inline-block;
             }        @media only screen and (max-width:990px) {            .product-grid {                margin: 0 0 30px;            }        }</style>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-C59FXDPNF3"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-C59FXDPNF3');
+        </script>
     </head>
     <body><div class="demo">
         <div class="container">

@@ -27,6 +27,15 @@
         fbq('init', '1505575896452256');
         fbq('track', 'PageView');
     </script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C59FXDPNF3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-C59FXDPNF3');
+    </script>
     <noscript>< img height="1" width="1" style="display:none"
         src="https://www.facebook.com/tr?id=1505575896452256&ev=PageView&noscript=1"
         /></noscript>
