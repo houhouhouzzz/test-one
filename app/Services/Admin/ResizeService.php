@@ -21,7 +21,7 @@ class ResizeService
             mkdir($path, 0777, true);
         }
         $real_path = public_path('static/uploads/images/' . $tmp_file_name);
-        $image->resize(round($image->width()/2), round($image->height()/2))->save($real_path);
+        $image->resize(round($image->width()*3/4), round($image->height()*3/4))->save($real_path);
         // 释放内存
         $image->destroy();
         $image = Image::make($real_path);
