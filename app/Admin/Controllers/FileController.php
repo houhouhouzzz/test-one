@@ -32,7 +32,7 @@ class FileController extends AdminController
         $md5  = md5_file($file->getPathName());
         $sha1 = sha1_file($file->getPathName());
 
-        $data = null;
+        $data = Image::where('md5', $md5)->where('sha1', $sha1)->first();;
         if( ! $data ){
             // 重置尺寸
             if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'webp'])) {
